@@ -1,17 +1,19 @@
 #include "system_stats.h"
 
 int main(int argc, char *argv[]){
-  struct MHD_Daemon *daemon;
+  struct mg_server *server;
 
-  daemon = MHD_start_daemon(
-    MHD_USE_THREAD_PER_CONNECTION, DEFAULT_HTTP_PORT, NULL, NULL,
-    &request_handler, NULL, MHD_OPTION_END
-  );
+  server = mg_create_server(NULL);
+  mg_set_option(server, "listening_port", "8080");
+  mg_set_option(server, "document_root", "public");
 
-  if(NULL == daemon)
-    return 1;
+  printf("Starting on port %s\n", mg_get_option(server, "listening_port"));
+  for (;;) {
+    mg_poll_server(server, 1000);
+  }
 
-  getchar();
-  MHD_stop_daemon(daemon);
+  // Cleanup, and free server instance
+  mg_destroy_server(&server);
+
   return 0;
 }
