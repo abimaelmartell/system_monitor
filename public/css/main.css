@@ -1,0 +1,13 @@
+body{
+  background: #222;
+  color: #FFF;
+  text-align: center;
+}
+
+div.loading{
+  width: 500px;
+  margin: 100px auto;
+}
+  div.loading span{
+    font-size: 40px;
+  }
