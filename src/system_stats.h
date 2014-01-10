@@ -1,13 +1,16 @@
-#include <mongoose.h>
 #include <string.h>
 #include <stdio.h>
 
+#include <sigar.h>
+#include <mongoose.h>
+#include <json-c/json.h>
+
 #include "web.h"
 
-#define DEFAULT_HTTP_PORT 3000
+enum log_levels{
+  LOG_WARNING,
+  LOG_INFO,
+  LOG_ERROR
+};
 
-struct globalOptions{
-  int port;
-} globalOptions;
-
-extern struct globalOptions options;
+extern void log_line(char *line, int level);
