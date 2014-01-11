@@ -9,6 +9,8 @@ void initialize_server(void){
   mg_set_option(server, "listening_port", DEFAULT_HTTP_PORT);
   mg_set_option(server, "document_root", "public");
 
+  mg_add_uri_handler(server, "/stats/all.json", &stats_all_json);
+
   sprintf(
     tmpBuf,
     "Initialized web server at port %s",
@@ -23,4 +25,35 @@ void initialize_server(void){
 
 void stop_server(void){
   mg_destroy_server(&server);
+}
+
+int stats_all_json(struct mg_connection *conn){
+  sigar_t *sigar;
+  sigar_mem_t memory;
+  json_object *stats_json, *memory_json;
+  char *stats_string;
+
+  sigar_open(&sigar);
+  sigar_mem_get(sigar, &memory);
+
+  stats_json = json_object_new_object();
+
+  memory_json = json_object_new_object();
+  json_object_object_add(memory_json, "total", json_object_new_int(memory.ram));
+  json_object_object_add(memory_json, "free", json_object_new_int(memory.free));
+  json_object_object_add(memory_json, "used", json_object_new_int(memory.used));
+
+  json_object_object_add(stats_json, "memory", memory_json);
+
+  stats_string = (char *) json_object_to_json_string(stats_json);
+
+  sigar_close(sigar);
+
+  mg_send_data(
+    conn,
+    stats_string,
+    strlen(stats_string)
+  );
+
+  return 0;
 }

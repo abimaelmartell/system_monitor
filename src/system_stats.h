@@ -13,4 +13,6 @@ enum log_levels{
   LOG_ERROR
 };
 
+extern sigar_t *sigar;
+
 extern void log_line(char *line, int level);

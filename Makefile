@@ -8,7 +8,7 @@ MONGOOSE_SOURCE = $(MONGOOSE_HOME)/mongoose.c
 
 CFLAGS  = -W -Wall -I. -I$(MONGOOSE_INC)
 INC = -I$(MONGOOSE_INC)
-LIBS = -lsigar
+LIBS = -lsigar -ljson-c
 
 default: $(PROGRAM)
 
