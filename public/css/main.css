@@ -1,12 +1,12 @@
 body{
-  background: #222;
-  color: #FFF;
+  color: #222;
   text-align: center;
 }
 
 div.loading{
-  width: 500px;
-  margin: 100px auto;
+  width: 100%;
+  position: absolute;
+  top: 40%;
 }
   div.loading span{
     font-size: 40px;

@@ -13,7 +13,5 @@
     return this.init();
   };
 
-
-
   window.system_stats = new SystemStats;
-})(Zepto, window);
+})(jQuery, window);
