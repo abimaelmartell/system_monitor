@@ -37,10 +37,12 @@ int stats_json(struct mg_connection *conn){
   sigar_file_system_usage_t file_system_usage;
   sigar_net_interface_list_t net_interface_list;
   sigar_net_interface_config_t net_interface_config;
-
+  sigar_net_interface_stat_t net_interface_stat;
+  sigar_uptime_t uptime;
   json_object *stats_json, *memory_json, *cpu_json, *cores_json, *core_json,
               *file_system_json, *file_systems_json, *file_system_usage_json,
-              *net_interfaces_json, *net_interface_json, *net_interface_address_json;
+              *net_interfaces_json, *net_interface_json, *net_interface_address_json,
+              *net_interface_stat_json;
   char *stats_string;
   int i;
 
@@ -122,11 +124,22 @@ int stats_json(struct mg_connection *conn){
     json_object_object_add(net_interface_address_json, "mac", json_object_new_string(mac_address_to_string(net_interface_config.hwaddr.addr.mac)));
     json_object_object_add(net_interface_json, "address", net_interface_address_json);
 
+    net_interface_stat_json = json_object_new_object();
+    sigar_net_interface_stat_get(sigar, net_interface_config.name, &net_interface_stat);
+    json_object_object_add(net_interface_stat_json, "speed", json_object_new_int64(net_interface_stat.speed));
+    json_object_object_add(net_interface_stat_json, "rx_packets", json_object_new_int64(net_interface_stat.rx_packets));
+    json_object_object_add(net_interface_stat_json, "tx_packets", json_object_new_int64(net_interface_stat.tx_packets));
+    json_object_object_add(net_interface_stat_json, "rx_bytes", json_object_new_int64(net_interface_stat.rx_bytes));
+    json_object_object_add(net_interface_stat_json, "tx_bytes", json_object_new_int64(net_interface_stat.tx_bytes));
+    json_object_object_add(net_interface_json, "stat", net_interface_stat_json);
 
     json_object_array_add(net_interfaces_json, net_interface_json);
   }
 
   json_object_object_add(stats_json, "network_interfaces", net_interfaces_json);
+
+  sigar_uptime_get(sigar, &uptime);
+  json_object_object_add(stats_json, "uptime", json_object_new_double(uptime.uptime));
 
   stats_string = (char *) json_object_to_json_string(stats_json);
 
