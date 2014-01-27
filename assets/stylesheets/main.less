@@ -1,0 +1,46 @@
+body{
+  color: #222;
+  background: #f4f4f4;
+
+  > header{
+    margin-top: 20px;  
+  }
+}
+
+h1, h2, h3{
+  margin-top: 0;
+}
+
+.box{
+  background: #FFF;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.mini-boxes{
+  margin-bottom: 20px;
+
+  .stat-resume{
+    &:extend(.box);
+
+    height: 100px;
+ 
+    h4{
+      font-size: 40px;
+      small{
+        font-size: 20px;    
+      }
+    }
+  }
+}
+
+.cpu-usage-chart,
+.net-usage-chart{
+  height: 200px;
+}
+
+#main{
+  > section{
+    margin-bottom: 20px;
+  }
+}

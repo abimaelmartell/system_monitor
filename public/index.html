@@ -8,11 +8,100 @@
     <link rel="stylesheet" href="/css/main.css" media="all"/>
   </head>
   <body>
-  <div class="loading">
-    <span class="fa fa-spinner fa-spin"></span>
-  </div>
-  <script src="/js/jquery.js"></script>
-  <script src="/js/bootstrap.js"></script>
-  <script src="/js/main.js"></script>
+    <header class="container">
+      <h1 class="pull-left">System Monitor</h1>
+      <a href="#" class="pull-right btn btn-primary"><i class="fa fa-cog"></i> Options</a>
+    </header>
+    <div class="container" id="main">
+
+      <!-- boxes -->
+      <section class="row mini-boxes">
+        <div class="col-sm-3">
+          <div class="stat-resume">
+            <h4>45% <small>RAM Usage</small></h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="stat-resume">
+            <h4>45% <small>Disk Usage</small></h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="stat-resume">
+            <h4>45% <small>CPU Usage</small></h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="stat-resume">
+            <h4>45% <small>RAM Usage</small></h4>
+          </div>
+        </div>
+      </section>
+      <!-- /boxes -->
+
+      <!-- graphs -->
+      <section class="row">
+        <div class="col-sm-8">
+          <div class="box">
+            <h3>CPU Load</h3>
+            <div class="cpu-usage-chart"></div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="box">
+            <h3>Network Usage</h3>
+            <div class="net-usage-chart"></div>
+          </div>
+        </div>
+      </section>
+      <!-- /graphs -->
+
+      <!-- processes -->
+      <section class="box">
+        <h3>Processes</h3>
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>PID</th>
+              <th>Process Name</th>
+              <th>CPU %</th>
+              <th>Memory</th>
+              <th>User</th>
+              <th>Threads</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2432</td>
+              <td>Apache</td>
+              <td>10%</td>
+              <td>100MB</td>
+              <td>nobody</td>
+              <td>145</td>
+            </tr>
+            <tr>
+              <td>2432</td>
+              <td>Apache</td>
+              <td>10%</td>
+              <td>100MB</td>
+              <td>nobody</td>
+              <td>145</td>
+            </tr>
+            <tr>
+              <td>2432</td>
+              <td>Apache</td>
+              <td>10%</td>
+              <td>100MB</td>
+              <td>nobody</td>
+              <td>145</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <!-- /processes -->
+    </div>
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/main.js"></script>
   </body>
 </html>
