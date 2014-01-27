@@ -2,10 +2,13 @@
 #include <stdio.h>
 
 #include <sigar.h>
+#include <sigar_private.h>
+#include <sigar_util.h>
 #include <mongoose.h>
 #include <json-c/json.h>
 
 #include "web.h"
+#include "utils.h"
 
 enum log_levels{
   LOG_WARNING,

@@ -35,8 +35,12 @@ int stats_json(struct mg_connection *conn){
   sigar_cpu_info_list_t cpu_info_list;
   sigar_file_system_list_t file_system_list;
   sigar_file_system_usage_t file_system_usage;
+  sigar_net_interface_list_t net_interface_list;
+  sigar_net_interface_config_t net_interface_config;
+
   json_object *stats_json, *memory_json, *cpu_json, *cores_json, *core_json,
-              *file_system_json, *file_systems_json, *file_system_usage_json;
+              *file_system_json, *file_systems_json, *file_system_usage_json,
+              *net_interfaces_json, *net_interface_json, *net_interface_address_json;
   char *stats_string;
   int i;
 
@@ -100,6 +104,29 @@ int stats_json(struct mg_connection *conn){
   }
   json_object_object_add(stats_json, "file_system", file_systems_json);
   sigar_file_system_list_destroy(sigar, &file_system_list);
+
+  sigar_net_interface_list_get(sigar, &net_interface_list);
+
+  net_interfaces_json = json_object_new_array();
+
+  for(i = 0; i < net_interface_list.number; i++){
+    sigar_net_interface_config_get(sigar, net_interface_list.data[i], &net_interface_config);
+
+    net_interface_json = json_object_new_object();
+
+    json_object_object_add(net_interface_json, "name", json_object_new_string(net_interface_config.name));
+    json_object_object_add(net_interface_json, "type", json_object_new_string(net_interface_config.type));
+
+    net_interface_address_json = json_object_new_object();
+    json_object_object_add(net_interface_address_json, "ip", json_object_new_string(inet_to_string(sigar, net_interface_config.address.addr.in)));
+    json_object_object_add(net_interface_address_json, "mac", json_object_new_string(mac_address_to_string(net_interface_config.hwaddr.addr.mac)));
+    json_object_object_add(net_interface_json, "address", net_interface_address_json);
+
+
+    json_object_array_add(net_interfaces_json, net_interface_json);
+  }
+
+  json_object_object_add(stats_json, "network_interfaces", net_interfaces_json);
 
   stats_string = (char *) json_object_to_json_string(stats_json);
 
