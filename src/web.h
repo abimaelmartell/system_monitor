@@ -8,3 +8,4 @@ extern void initialize_server(void);
 extern void stop_server(void);
 
 extern int stats_json(struct mg_connection *conn);
+extern int index_html(struct mg_connection *conn);

@@ -19,3 +19,4 @@ enum log_levels{
 extern sigar_t *sigar;
 
 extern void log_line(char *line, int level);
+extern json_object * get_stats_json();
