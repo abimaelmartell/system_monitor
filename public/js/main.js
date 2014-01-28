@@ -7,7 +7,19 @@
     this.statsJSON = {};
 
     this.init = function(){
+      this.configure();
       this.fetchStats();
+    }
+
+    this.configure = function(){
+      $.dynatableSetup({
+        features: {
+          pushState: false
+        },
+        dataset: {
+          perPageDefault: 20
+        }
+      });
     }
 
     this.fetchStats = function(){
@@ -21,6 +33,7 @@
       this.renderMemory();
       this.renderFileSystem();
       this.renderCPU();
+      this.renderProcesses();
     }
 
     this.renderMemory = function(){
@@ -52,6 +65,12 @@
       }
       total_average  = Math.floor(total_average / core_usage.length);
       $("[data-display='cpu-usage-percent']").text(total_average + "%");
+    }
+
+    this.renderProcesses = function(){
+      var template = _.template($("#process-template").html());
+      $("#processes-table tbody").html(template({processes: this.statsJSON.processes}));
+      $("#processes-table").dynatable();
     }
 
     return this.init();
