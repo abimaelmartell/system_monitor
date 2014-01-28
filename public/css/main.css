@@ -2,12 +2,19 @@ body {
   color: #222;
   background: #f4f4f4;
 }
-body > header {
-  margin-top: 20px;
-}
-h1,
-h2,
-h3 {
+  body > header {
+    margin-top: 20px;
+  }
+
+  body > footer{
+    padding: 20px;
+    color: #999;
+  }
+    body > footer a{
+      color: #999;
+    }
+
+h1, h2, h3 {
   margin-top: 0;
 }
 .box,
