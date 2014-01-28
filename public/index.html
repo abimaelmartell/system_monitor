@@ -11,7 +11,7 @@
   <body>
     <header class="container">
       <h1 class="pull-left">System Monitor</h1>
-      <a href="#" class="pull-right btn btn-primary"><i class="fa fa-cog"></i> Options</a>
+      <!--<a href="#" class="pull-right btn btn-primary"><i class="fa fa-cog"></i> Options</a> -->
     </header>
     <div class="container" id="main">
 
@@ -34,6 +34,28 @@
         </div>
       </section>
       <!-- /boxes -->
+
+      <!-- general info -->
+      <section class="row">
+        <div class="col-sm-8">
+          <div class="box">
+            <h3>System Information</h3>
+            <h4>Processor: <span class="text-muted" data-display="cpu-info"></span></h4>
+            <h4>Uptime: <span class="text-muted" data-display="uptime"></span></h4>
+            <h4>Host Name: <span class="text-muted" data-display="hostname"></span></h4>
+            <h4>Operative System: <span class="text-muted" data-display="os"></span></h4>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="box">
+            <h3>RAM Statistics</h3>
+            <h4>Total: <span class="text-muted" data-display="ram-total"></span></h4>
+            <h4>Used: <span class="text-muted" data-display="ram-used"></span></h4>
+            <h4>Free: <span class="text-muted" data-display="ram-free"></span></h4>
+          </div>
+        </div>
+      </section>
+      <!-- /general info -->
 
       <!-- processes -->
       <section class="box">
@@ -152,6 +174,5 @@
     <script src="/js/vendor/bootstrap.js"></script>
     <script src="/js/vendor/jquery.dynatable.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/stats.js"></script>
   </body>
 </html>

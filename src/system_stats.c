@@ -23,11 +23,13 @@ json_object * get_stats_json(){
   sigar_proc_cred_name_t proc_cred;
   sigar_proc_mem_t proc_mem;
   sigar_thread_cpu_t proc_threads;
+  sigar_net_info_t net_info;
+  sigar_sys_info_t sys_info;
   json_object *stats_json, *memory_json, *cpu_json, *cores_json, *core_json,
               *file_system_json, *file_systems_json, *file_system_usage_json,
               *net_interfaces_json, *net_interface_json, *net_interface_address_json,
               *net_interface_stat_json, *proc_list_json, *proc_json, *proc_cpu_json,
-              *proc_mem_json;
+              *proc_mem_json, *net_info_json, *sys_info_json;
   char *stats_string, *state_string;
   int i, primary_interface;
 
@@ -38,9 +40,10 @@ json_object * get_stats_json(){
 
   memory_json = json_object_new_object();
   json_object_object_add(memory_json, "total", json_object_new_int64(memory.ram));
-  json_object_object_add(memory_json, "free", json_object_new_int64(memory.free));
-  json_object_object_add(memory_json, "used", json_object_new_int64(memory.used));
+  json_object_object_add(memory_json, "free", json_object_new_int64(memory.actual_free));
+  json_object_object_add(memory_json, "used", json_object_new_int64(memory.actual_used));
   json_object_object_add(memory_json, "used_percent", json_object_new_int64(memory.used_percent));
+  json_object_object_add(memory_json, "free_percent", json_object_new_int64(memory.free_percent));
 
   json_object_object_add(stats_json, "memory", memory_json);
 
@@ -196,8 +199,30 @@ json_object * get_stats_json(){
     json_object_array_add(proc_list_json, proc_json);
   }
   json_object_object_add(stats_json, "processes", proc_list_json);
-
   sigar_proc_list_destroy(sigar, &proc_list);
+
+  net_info_json = json_object_new_object();
+  sigar_net_info_get(sigar, &net_info);
+  json_object_object_add(net_info_json, "host_name", json_object_new_string(net_info.host_name));
+  json_object_object_add(net_info_json, "default_gateway", json_object_new_string(net_info.default_gateway));
+  json_object_object_add(net_info_json, "default_gateway_interface", json_object_new_string(net_info.default_gateway_interface));
+  json_object_object_add(net_info_json, "primary_dns", json_object_new_string(net_info.primary_dns));
+  json_object_object_add(stats_json, "network_info", net_info_json);
+
+  sys_info_json = json_object_new_object();
+  sigar_sys_info_get(sigar, &sys_info);
+  json_object_object_add(sys_info_json, "name", json_object_new_string(sys_info.name));
+  json_object_object_add(sys_info_json, "version", json_object_new_string(sys_info.version));
+  json_object_object_add(sys_info_json, "arch", json_object_new_string(sys_info.arch));
+  json_object_object_add(sys_info_json, "machine", json_object_new_string(sys_info.machine));
+  json_object_object_add(sys_info_json, "description", json_object_new_string(sys_info.description));
+  json_object_object_add(sys_info_json, "patch_level", json_object_new_string(sys_info.patch_level));
+  json_object_object_add(sys_info_json, "vendor", json_object_new_string(sys_info.vendor));
+  json_object_object_add(sys_info_json, "vendor_version", json_object_new_string(sys_info.vendor_version));
+  json_object_object_add(sys_info_json, "vendor_name", json_object_new_string(sys_info.vendor_name));
+  json_object_object_add(sys_info_json, "vendor_code_name", json_object_new_string(sys_info.vendor_code_name));
+  json_object_object_add(stats_json, "system_info", sys_info_json);
+
 
   sigar_close(sigar);
 

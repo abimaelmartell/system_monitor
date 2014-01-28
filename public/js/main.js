@@ -35,10 +35,16 @@
       this.renderCPU();
       this.renderProcesses();
       this.renderNetworkInterfaces();
+      this.renderUptime();
+      this.renderNetworkInfo();
+      this.renderSystemInfo();
     }
 
     this.renderMemory = function(){
       $("[data-display='ram-usage-percent']").text(this.statsJSON.memory.used_percent + "%");
+      $("[data-display='ram-total']").text(this.statsJSON.memory.total + " MB");
+      $("[data-display='ram-used']").text((this.statsJSON.memory.used / 1024 / 1024).toFixed(2) + " MB");
+      $("[data-display='ram-free']").text((this.statsJSON.memory.free / 1024 / 1024).toFixed(2) + " MB");
     }
 
     this.renderFileSystem = function(){
@@ -75,6 +81,7 @@
       }
       total_average  = Math.floor(total_average / core_usage.length);
       $("[data-display='cpu-usage-percent']").text(total_average + "%");
+      $("[data-display='cpu-info']").text(this.statsJSON.cpu.vendor + " " + this.statsJSON.cpu.model);
     }
 
     this.renderProcesses = function(){
@@ -92,6 +99,50 @@
           search: false
         }
       });
+    }
+
+    this.renderUptime = function(){
+      var secondsInAMinute = 60,
+          secondsInAnHour = 60 * secondsInAMinute,
+          secondaInADay = 24 * secondsInAnHour,
+          days, uptime_string = "";
+
+      days = Math.floor(this.statsJSON.uptime / secondaInADay);
+
+      hourSeconds = this.statsJSON.uptime % secondaInADay;
+      hours = Math.floor(hourSeconds / secondsInAnHour);
+
+      minuteSeconds = hourSeconds % secondsInAnHour;
+      minutes = Math.floor(minuteSeconds / secondsInAMinute);
+
+      remainingSecods = minuteSeconds % secondsInAMinute;
+      seconds = Math.ceil(remainingSecods);
+
+      if(days)
+        uptime_string += days + " days, ";
+
+      if(hours)
+        uptime_string += hours + " hours, ";
+
+      if(minutes)
+        uptime_string += minutes + " minutes, ";
+
+      if(seconds)
+        uptime_string += seconds + " seconds";
+
+      $("[data-display='uptime']").text(uptime_string);
+    }
+
+    this.renderNetworkInfo = function(){
+        $("[data-display='hostname']").text(this.statsJSON.network_info.host_name)
+    }
+
+    this.renderSystemInfo = function(){
+        var os_string;
+        $("[data-display='architecture']").text(this.statsJSON.system_info.arch)
+
+        os_string = this.statsJSON.system_info.name + " " + this.statsJSON.system_info.version + " " + this.statsJSON.system_info.description + " " + this.statsJSON.system_info.arch;
+        $("[data-display='os']").text(os_string);
     }
 
     return this.init();
