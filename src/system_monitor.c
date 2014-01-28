@@ -60,10 +60,13 @@ json_object * get_stats_json(){
   for(i = 0; i < cpu_list.number; i++){
     core_json = json_object_new_object();
     json_object_object_add(core_json, "user",  json_object_new_int64(cpu_list.data[i].user));
-    json_object_object_add(core_json, "idle",  json_object_new_int64(cpu_list.data[i].idle));
-    json_object_object_add(core_json, "nice",  json_object_new_int64(cpu_list.data[i].nice));
-    json_object_object_add(core_json, "irq",   json_object_new_int64(cpu_list.data[i].irq));
     json_object_object_add(core_json, "sys",   json_object_new_int64(cpu_list.data[i].sys));
+    json_object_object_add(core_json, "nice",  json_object_new_int64(cpu_list.data[i].nice));
+    json_object_object_add(core_json, "idle",  json_object_new_int64(cpu_list.data[i].idle));
+    json_object_object_add(core_json, "wait",   json_object_new_int64(cpu_list.data[i].wait));
+    json_object_object_add(core_json, "irq",   json_object_new_int64(cpu_list.data[i].irq));
+    json_object_object_add(core_json, "soft_irq",   json_object_new_int64(cpu_list.data[i].soft_irq));
+    json_object_object_add(core_json, "stolen",   json_object_new_int64(cpu_list.data[i].stolen));
     json_object_object_add(core_json, "total", json_object_new_int64(cpu_list.data[i].total));
     json_object_array_add(cores_json, core_json);
   }

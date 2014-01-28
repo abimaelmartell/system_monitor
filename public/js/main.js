@@ -82,6 +82,15 @@
       total_average  = Math.floor(total_average / core_usage.length);
       $("[data-display='cpu-usage-percent']").text(total_average + "%");
       $("[data-display='cpu-info']").text(this.statsJSON.cpu.vendor + " " + this.statsJSON.cpu.model);
+      var template = _.template($("#cpu-core-template").html());
+      $("#cpus-table tbody").html(template({cpu_cores: this.statsJSON.cpu.cores}));
+      $("#cpus-table").dynatable({
+        features: {
+          paginate: false,
+          search: false
+        }
+      });
+
     }
 
     this.renderProcesses = function(){

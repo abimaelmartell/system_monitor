@@ -57,6 +57,30 @@
       </section>
       <!-- /general info -->
 
+      <!-- cpu info -->
+      <section class="box">
+        <h3>CPU's</h3>
+        <table class="table table-hover table-striped" id="cpus-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>System</th>
+              <th>Nice</th>
+              <th>Idle</th>
+              <th>Wait</th>
+              <th>IRQ</th>
+              <th>Soft IRQ</th>
+              <th>Stolen</th>
+              <th>Total</th>
+            </th>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </section>
+      <!-- cpu info -->
+
       <!-- processes -->
       <section class="box">
         <h3>Processes</h3>
@@ -170,6 +194,22 @@
         <td><%= file_system.usage.used %></td>
         <td><%= file_system.usage.available %></td>
         <td><%= file_system.usage.files %></td>
+      </tr>
+      <% }) %>
+    </script>
+    <script type="text/template" id="cpu-core-template">
+      <% _.each(cpu_cores, function(core, i){ %>
+      <tr>
+        <td><%= i + 1 %></td>
+        <td><%= core.user %></td>
+        <td><%= core.sys %></td>
+        <td><%= core.nice %></td>
+        <td><%= core.idle %></td>
+        <td><%= core.wait %></td>
+        <td><%= core.irq %></td>
+        <td><%= core.soft_irq %></td>
+        <td><%= core.stolen %></td>
+        <td><%= core.total %></td>
       </tr>
       <% }) %>
     </script>
