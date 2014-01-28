@@ -17,11 +17,18 @@ json_object * get_stats_json(){
   sigar_net_interface_config_t net_interface_config, net_interface_primary;
   sigar_net_interface_stat_t net_interface_stat;
   sigar_uptime_t uptime;
+  sigar_proc_list_t proc_list;
+  sigar_proc_state_t proc_state;
+  sigar_proc_cpu_t proc_cpu;
+  sigar_proc_cred_name_t proc_cred;
+  sigar_proc_mem_t proc_mem;
+  sigar_thread_cpu_t proc_threads;
   json_object *stats_json, *memory_json, *cpu_json, *cores_json, *core_json,
               *file_system_json, *file_systems_json, *file_system_usage_json,
               *net_interfaces_json, *net_interface_json, *net_interface_address_json,
-              *net_interface_stat_json;
-  char *stats_string;
+              *net_interface_stat_json, *proc_list_json, *proc_json, *proc_cpu_json,
+              *proc_mem_json;
+  char *stats_string, *state_string;
   int i, primary_interface;
 
   sigar_open(&sigar);
@@ -128,6 +135,69 @@ json_object * get_stats_json(){
 
   sigar_uptime_get(sigar, &uptime);
   json_object_object_add(stats_json, "uptime", json_object_new_double(uptime.uptime));
+
+  sigar_proc_list_get(sigar, &proc_list);
+  proc_list_json = json_object_new_array();
+  for(i = 0; i < proc_list.number; i++){
+    sigar_proc_state_get(sigar, proc_list.data[i], &proc_state);
+    sigar_proc_cpu_get(sigar, proc_list.data[i], &proc_cpu);
+    sigar_proc_cred_name_get(sigar, proc_list.data[i], &proc_cred);
+    sigar_proc_mem_get(sigar, proc_list.data[i], &proc_mem);
+    sigar_thread_cpu_get(sigar, proc_list.data[i], &proc_threads);
+
+    proc_json = json_object_new_object();
+
+    switch(proc_state.state){
+      case SIGAR_PROC_STATE_SLEEP:
+        state_string = "Sleeping";
+      break;
+      case SIGAR_PROC_STATE_RUN:
+        state_string = "Running";
+      break;
+      case SIGAR_PROC_STATE_STOP:
+        state_string = "Stopped";
+      break;
+      case SIGAR_PROC_STATE_ZOMBIE:
+        state_string = "Zombie";
+      break;
+      case SIGAR_PROC_STATE_IDLE:
+        state_string = "Idle";
+      break;
+      default:
+        state_string = "";
+      break;
+    }
+
+
+    json_object_object_add(proc_json, "name",    json_object_new_string(proc_state.name));
+    json_object_object_add(proc_json, "pid",     json_object_new_int64(proc_list.data[i]));
+    json_object_object_add(proc_json, "state",   json_object_new_string(state_string));
+    json_object_object_add(proc_json, "user",    json_object_new_string(proc_cred.user));
+    json_object_object_add(proc_json, "threads", json_object_new_int(proc_state.threads));
+
+    proc_cpu_json = json_object_new_object();
+    json_object_object_add(proc_cpu_json, "start_time", json_object_new_int64(proc_cpu.start_time));
+    json_object_object_add(proc_cpu_json, "user", json_object_new_int64(proc_cpu.user));
+    json_object_object_add(proc_cpu_json, "sys", json_object_new_int64(proc_cpu.sys));
+    json_object_object_add(proc_cpu_json, "total", json_object_new_int64(proc_cpu.total));
+    json_object_object_add(proc_cpu_json, "last_time", json_object_new_int64(proc_cpu.last_time));
+    json_object_object_add(proc_cpu_json, "percent", json_object_new_double(proc_cpu.percent));
+    json_object_object_add(proc_json, "cpu",  proc_cpu_json);
+
+    proc_mem_json = json_object_new_object();
+    json_object_object_add(proc_mem_json, "size", json_object_new_int64(proc_mem.size));
+    json_object_object_add(proc_mem_json, "resident", json_object_new_int64(proc_mem.resident));
+    json_object_object_add(proc_mem_json, "share", json_object_new_int64(proc_mem.share));
+    json_object_object_add(proc_mem_json, "minor_faults", json_object_new_int64(proc_mem.minor_faults));
+    json_object_object_add(proc_mem_json, "major_faults", json_object_new_int64(proc_mem.major_faults));
+    json_object_object_add(proc_mem_json, "page_faults", json_object_new_double(proc_mem.page_faults));
+    json_object_object_add(proc_json, "memory",  proc_mem_json);
+
+    json_object_array_add(proc_list_json, proc_json);
+  }
+  json_object_object_add(stats_json, "processes", proc_list_json);
+
+  sigar_proc_list_destroy(sigar, &proc_list);
 
   sigar_close(sigar);
 
