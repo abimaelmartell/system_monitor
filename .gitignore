@@ -1,3 +1,2 @@
 *.o
-system_stats
-node_modules
+system_monitor

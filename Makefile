@@ -1,6 +1,6 @@
-HEADERS = src/system_stats.h src/web.h src/utils.h
-OBJECTS = src/main.o src/web.o src/system_stats.o src/utils.o
-PROGRAM = system_stats
+HEADERS = src/system_monitor.h src/web.h src/utils.h
+OBJECTS = src/main.o src/web.o src/system_monitor.o src/utils.o
+PROGRAM = system_monitor
 
 MONGOOSE_HOME = vendor/mongoose
 MONGOOSE_INC = $(MONGOOSE_HOME)
