@@ -55,6 +55,53 @@
         </table>
       </section>
       <!-- /processes -->
+
+      <!-- network interfaces -->
+      <section class="box">
+        <h3>Network Interfaces</h3>
+        <table class="table table-hover table-striped" id="network-interfaces-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>IP Address</th>
+              <th>MAC Address</th>
+              <th>Speed</th>
+              <th>Transmitted Bytes</th>
+              <th>Received Bytes</th>
+              <th>Transmitted Packets</th>
+              <th>Received Packets</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </section>
+      <!-- /network interfaces -->
+
+      <!-- file systems -->
+      <section class="box">
+        <h3>File Systems</h3>
+        <table class="table table-hover table-striped" id="file-systems-table">
+          <thead>
+            <tr>
+              <th>Dir</th>
+              <th>Dev</th>
+              <th>Type</th>
+              <th>Usage Percent</th>
+              <th>Total</th>
+              <th>Free</th>
+              <th>Used</th>
+              <th>Available</th>
+              <th>Files</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </section>
+      <!-- /file systems -->
+
     </div>
     <script type="text/template" id="process-template">
       <% _.each(processes, function(process){ %>
@@ -66,6 +113,36 @@
         <td><%= process.user %></td>
         <td><%= process.threads %></td>
         <td><%= process.state %></td>
+      </tr>
+      <% }) %>
+    </script>
+    <script type="text/template" id="network-interfaces-template">
+      <% _.each(network_interfaces, function(network_interface){ %>
+      <tr>
+        <td><%= network_interface.name %></td>
+        <td><%= network_interface.type %></td>
+        <td><%= network_interface.address.ip %></td>
+        <td><%= network_interface.address.MAC %></td>
+        <td><%= network_interface.stat.speed %></td>
+        <td><%= network_interface.stat.rx_bytes %></td>
+        <td><%= network_interface.stat.tx_bytes %></td>
+        <td><%= network_interface.stat.rx_packets %></td>
+        <td><%= network_interface.stat.tx_packets %></td>
+      </tr>
+      <% }) %>
+    </script>
+    <script type="text/template" id="file-systems-template">
+      <% _.each(file_systems, function(file_system){ %>
+      <tr>
+        <td><%= file_system.dir %></td>
+        <td><%= file_system.dev %></td>
+        <td><%= file_system.type %></td>
+        <td><%= file_system.usage.use_percent %></td>
+        <td><%= file_system.usage.total %></td>
+        <td><%= file_system.usage.free %></td>
+        <td><%= file_system.usage.used %></td>
+        <td><%= file_system.usage.available %></td>
+        <td><%= file_system.usage.files %></td>
       </tr>
       <% }) %>
     </script>

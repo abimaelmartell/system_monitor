@@ -34,6 +34,7 @@
       this.renderFileSystem();
       this.renderCPU();
       this.renderProcesses();
+      this.renderNetworkInterfaces();
     }
 
     this.renderMemory = function(){
@@ -50,6 +51,15 @@
       }
 
       $("[data-display='disk-usage-percent']").text((main_fs.usage.use_percent * 100 ) + "%");
+
+      var template = _.template($("#file-systems-template").html());
+      $("#file-systems-table tbody").html(template({file_systems: this.statsJSON.file_systems}));
+      $("#file-systems-table").dynatable({
+        features: {
+          paginate: false,
+          search: false
+        }
+      });
     }
 
     this.renderCPU = function(){
@@ -71,6 +81,17 @@
       var template = _.template($("#process-template").html());
       $("#processes-table tbody").html(template({processes: this.statsJSON.processes}));
       $("#processes-table").dynatable();
+    }
+
+    this.renderNetworkInterfaces = function(){
+      var template = _.template($("#network-interfaces-template").html());
+      $("#network-interfaces-table tbody").html(template({network_interfaces: this.statsJSON.network_interfaces}));
+      $("#network-interfaces-table").dynatable({
+        features: {
+          paginate: false,
+          search: false
+        }
+      });
     }
 
     return this.init();
