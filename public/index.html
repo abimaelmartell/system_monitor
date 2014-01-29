@@ -31,17 +31,17 @@
       <section class="row mini-boxes">
         <div class="col-sm-4">
           <div class="stat-resume">
-            <h4><span data-display="ram-usage-percent"></span> <small>RAM Usage</small></h4>
+            <h4><%= memory.used_percent %>% <small>RAM Usage</small></h4>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="stat-resume">
-            <h4><span data-display="disk-usage-percent"></span> <small>Disk Usage</small></h4>
+            <h4><small>Disk Usage</small></h4>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="stat-resume">
-            <h4><span data-display="cpu-usage-percent"></span> <small>CPU Usage</small></h4>
+            <h4><%= cpu_usage_percent %>% <small>CPU Usage</small></h4>
           </div>
         </div>
       </section>
@@ -88,7 +88,7 @@
             </th>
           </thead>
           <tbody>
-          <% _.each(cpu_cores, function(core, i){ %>
+          <% _.each(cpu.cores, function(core, i){ %>
             <tr>
               <td><%= i + 1 %></td>
               <td><%= core.user %></td>
@@ -213,6 +213,9 @@
     <script src="/js/vendor/backbone.js"></script>
     <script src="/js/vendor/bootstrap.js"></script>
     <script src="/js/vendor/jquery.dynatable.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/stats.js"></script>
+    <script src="/js/views/dashboard.js"></script>
+    <script src="/js/router.js"></script>
+    <script src="/js/app.js"></script>
   </body>
 </html>
