@@ -30,4 +30,15 @@ window.App = window.App || {};
     return ago_string;
   }
 
+  App.Utils.convertBytes = function(bytes, to){
+    var return_val;
+    if(typeof to === 'undefined')
+      to = 'mb';
+
+    if(to == 'mb')
+      return_val = bytes / 1024 / 1024;
+
+    return Math.floor(return_val);
+  }
+
 })();
