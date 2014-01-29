@@ -10,12 +10,24 @@
   </head>
   <body>
     <header class="container">
-      <h1 class="pull-left"><a href="/">System Monitor</a></h1>
+      <h1 class="pull-left"><a href="#/">System Monitor</a></h1>
       <!--<a href="#" class="pull-right btn btn-primary"><i class="fa fa-cog"></i> Options</a> -->
+      <ul class="list-inline pull-right">
+        <li><a href="#/">Dashboard</a></li>
+        <li><a href="#/file-systems/">File Systems</a></li>
+        <li><a href="#/processes/">Processes</a></li>
+        <li><a href="#/network/">Network</a></li>
+        <li><a href="#/options/">Options</a></li>
+      </ul>
     </header>
     <div class="container" id="main">
-
-      <!-- boxes -->
+    </div>
+    <footer class="container">
+      <p>&copy; 2014 ·
+        <a href="http://abimaelmartell.com">Abimael Martell</a>
+      </p>
+    </footer>
+    <script type="text/template" id="dashboard-template">
       <section class="row mini-boxes">
         <div class="col-sm-4">
           <div class="stat-resume">
@@ -76,12 +88,26 @@
             </th>
           </thead>
           <tbody>
+          <% _.each(cpu_cores, function(core, i){ %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= core.user %></td>
+              <td><%= core.sys %></td>
+              <td><%= core.nice %></td>
+              <td><%= core.idle %></td>
+              <td><%= core.wait %></td>
+              <td><%= core.irq %></td>
+              <td><%= core.soft_irq %></td>
+              <td><%= core.stolen %></td>
+              <td><%= core.total %></td>
+            </tr>
+          <% }) %>
           </tbody>
         </table>
       </section>
-      <!-- cpu info -->
+    </script>
 
-      <!-- processes -->
+    <script type="text/template" id="processes-template">
       <section class="box">
         <h3>Processes</h3>
         <table class="table table-hover table-striped" id="processes-table">
@@ -90,19 +116,28 @@
               <th>PID</th>
               <th>Process Name</th>
               <th>CPU %</th>
-              <!--<th>Memory</th>-->
               <th>User</th>
               <th data-dynatable-sort>Threads</th>
               <th>State</th>
             </tr>
           </thead>
           <tbody>
+          <% _.each(processes, function(process){ %>
+            <tr>
+              <td><%= process.pid %></td>
+              <td><%= process.name %></td>
+              <td><%= process.cpu.percent %></td>
+              <td><%= process.user %></td>
+              <td><%= process.threads %></td>
+              <td><%= process.state %></td>
+            </tr>
+          <% }) %>
           </tbody>
         </table>
       </section>
-      <!-- /processes -->
+    </script>
 
-      <!-- network interfaces -->
+    <script type="text/template">
       <section class="box">
         <h3>Network Interfaces</h3>
         <table class="table table-hover table-striped" id="network-interfaces-table">
@@ -120,12 +155,25 @@
             </tr>
           </thead>
           <tbody>
+          <% _.each(network_interfaces, function(network_interface){ %>
+            <tr>
+              <td><%= network_interface.name %></td>
+              <td><%= network_interface.type %></td>
+              <td><%= network_interface.address.ip %></td>
+              <td><%= network_interface.address.mac %></td>
+              <td><%= network_interface.stat.speed %></td>
+              <td><%= network_interface.stat.rx_bytes %></td>
+              <td><%= network_interface.stat.tx_bytes %></td>
+              <td><%= network_interface.stat.rx_packets %></td>
+              <td><%= network_interface.stat.tx_packets %></td>
+            </tr>
+          <% }) %>
           </tbody>
         </table>
       </section>
-      <!-- /network interfaces -->
+    </script>
 
-      <!-- file systems -->
+    <script type="text/template" id="file-systems-template">
       <section class="box">
         <h3>File Systems</h3>
         <table class="table table-hover table-striped" id="file-systems-table">
@@ -143,75 +191,22 @@
             </tr>
           </thead>
           <tbody>
+          <% _.each(file_systems, function(file_system){ %>
+            <tr>
+              <td><%= file_system.dir %></td>
+              <td><%= file_system.dev %></td>
+              <td><%= file_system.type %></td>
+              <td><%= file_system.usage.use_percent %></td>
+              <td><%= file_system.usage.total %></td>
+              <td><%= file_system.usage.free %></td>
+              <td><%= file_system.usage.used %></td>
+              <td><%= file_system.usage.available %></td>
+              <td><%= file_system.usage.files %></td>
+            </tr>
+          <% }) %>
           </tbody>
         </table>
       </section>
-      <!-- /file systems -->
-
-    </div>
-    <footer class="container">
-      <p>&copy; 2014 ·
-        <a href="http://abimaelmartell.com">Abimael Martell</a>
-      </p>
-    </footer>
-    <script type="text/template" id="process-template">
-      <% _.each(processes, function(process){ %>
-      <tr>
-        <td><%= process.pid %></td>
-        <td><%= process.name %></td>
-        <td><%= process.cpu.percent %></td>
-        <!--<td>100MB</td>-->
-        <td><%= process.user %></td>
-        <td><%= process.threads %></td>
-        <td><%= process.state %></td>
-      </tr>
-      <% }) %>
-    </script>
-    <script type="text/template" id="network-interfaces-template">
-      <% _.each(network_interfaces, function(network_interface){ %>
-      <tr>
-        <td><%= network_interface.name %></td>
-        <td><%= network_interface.type %></td>
-        <td><%= network_interface.address.ip %></td>
-        <td><%= network_interface.address.mac %></td>
-        <td><%= network_interface.stat.speed %></td>
-        <td><%= network_interface.stat.rx_bytes %></td>
-        <td><%= network_interface.stat.tx_bytes %></td>
-        <td><%= network_interface.stat.rx_packets %></td>
-        <td><%= network_interface.stat.tx_packets %></td>
-      </tr>
-      <% }) %>
-    </script>
-    <script type="text/template" id="file-systems-template">
-      <% _.each(file_systems, function(file_system){ %>
-      <tr>
-        <td><%= file_system.dir %></td>
-        <td><%= file_system.dev %></td>
-        <td><%= file_system.type %></td>
-        <td><%= file_system.usage.use_percent %></td>
-        <td><%= file_system.usage.total %></td>
-        <td><%= file_system.usage.free %></td>
-        <td><%= file_system.usage.used %></td>
-        <td><%= file_system.usage.available %></td>
-        <td><%= file_system.usage.files %></td>
-      </tr>
-      <% }) %>
-    </script>
-    <script type="text/template" id="cpu-core-template">
-      <% _.each(cpu_cores, function(core, i){ %>
-      <tr>
-        <td><%= i + 1 %></td>
-        <td><%= core.user %></td>
-        <td><%= core.sys %></td>
-        <td><%= core.nice %></td>
-        <td><%= core.idle %></td>
-        <td><%= core.wait %></td>
-        <td><%= core.irq %></td>
-        <td><%= core.soft_irq %></td>
-        <td><%= core.stolen %></td>
-        <td><%= core.total %></td>
-      </tr>
-      <% }) %>
     </script>
     <script src="/js/vendor/jquery.js"></script>
     <script src="/js/vendor/underscore.js"></script>
