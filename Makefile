@@ -6,17 +6,30 @@ MONGOOSE_HOME = vendor/mongoose
 MONGOOSE_INC = $(MONGOOSE_HOME)
 MONGOOSE_SOURCE = $(MONGOOSE_HOME)/mongoose.c
 
+JSON_HOME = vendor/json-c
+JSON_INC = $(JSON_HOME)
+JSON_LIB=$(JSON_HOME)/.libs/libjson-c.a
+
+LIB_TARGETS = $(JSON_LIB)
+
 CFLAGS  = -W -Wall -I. -I$(MONGOOSE_INC)
 INC = -I$(MONGOOSE_INC)
-LIBS = -lsigar -ljson-c -ldl -lpthread
+LIBS = -ldl -lpthread -lsigar $(JSON_LIB)
 
-default: $(PROGRAM)
+.PHONY: default all clean
+
+default: $(LIB_TARGETS) $(PROGRAM)
+
+all: default
 
 %.o: %.c $(HEADERS)
 	gcc -c $< -o $@ $(INC)
 
 $(PROGRAM): $(OBJECTS)
 	gcc $(OBJECTS) $(MONGOOSE_SOURCE) -o $@ $(LIBS)
+
+$(JSON_LIB):
+	cd $(JSON_HOME); ./autogen.sh; ./configure; make
 
 clean:
 	-rm -f $(OBJECTS)
