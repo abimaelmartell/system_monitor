@@ -3,14 +3,8 @@ window.App = window.App || {};
   App.DashboardView = Backbone.View.extend({
     template: _.template($('#dashboard-template').html()),
     render: function(){
-      this.$el.html(this.template(this.get_attributes_object()));
+      this.$el.html(this.template(App.Stats.toJSON()));
       return this; 
-    },
-    get_attributes_object: function(){
-      var attributes = App.Stats.toJSON();
-      attributes.cpu_usage_percent = App.Stats.getCPUUsagePercent();
-
-      return attributes;
     }
   });
 })();

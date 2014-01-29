@@ -36,7 +36,7 @@
         </div>
         <div class="col-sm-4">
           <div class="stat-resume">
-            <h4><small>Disk Usage</small></h4>
+            <h4><%= disk_usage_percent %>% <small>Disk Usage</small></h4>
           </div>
         </div>
         <div class="col-sm-4">
@@ -52,18 +52,18 @@
         <div class="col-sm-8">
           <div class="box">
             <h3>System Information</h3>
-            <h4>Processor: <span class="text-muted" data-display="cpu-info"></span></h4>
-            <h4>Uptime: <span class="text-muted" data-display="uptime"></span></h4>
-            <h4>Host Name: <span class="text-muted" data-display="hostname"></span></h4>
-            <h4>Operative System: <span class="text-muted" data-display="os"></span></h4>
+            <h4>Processor: <span class="text-muted"><%= cpu.vendor + " " + cpu.model %></span></h4>
+            <h4>Uptime: <span class="text-muted"><%= uptime_string %></span></h4>
+            <h4>Host Name: <span class="text-muted"><%= network_info.host_name %></span></h4>
+            <h4>Operative System: <span class="text-muted"><%= system_info.name + " " + system_info.version + " " + system_info.description + " " + system_info.arch %></span></h4>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="box">
-            <h3>RAM Statistics</h3>
-            <h4>Total: <span class="text-muted" data-display="ram-total"></span></h4>
-            <h4>Used: <span class="text-muted" data-display="ram-used"></span></h4>
-            <h4>Free: <span class="text-muted" data-display="ram-free"></span></h4>
+            <h3>RAM Information</h3>
+            <h4>Total: <%= memory.total %></h4>
+            <h4>Used: <%= memory.free %></h4>
+            <h4>Free: <%= memory.used %></h4>
           </div>
         </div>
       </section>
@@ -213,6 +213,7 @@
     <script src="/js/vendor/backbone.js"></script>
     <script src="/js/vendor/bootstrap.js"></script>
     <script src="/js/vendor/jquery.dynatable.js"></script>
+    <script src="/js/utils.js"></script>
     <script src="/js/stats.js"></script>
     <script src="/js/views/dashboard.js"></script>
     <script src="/js/router.js"></script>

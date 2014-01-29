@@ -10,6 +10,12 @@ window.App = window.App || {};
     dashboard: function(){
       var dashboardView = new App.DashboardView();
       this.$el.html(dashboardView.render().$el.html())
+      $("#cpus-table").dynatable({
+        features: {
+          paginate: false,
+          search: false
+        }
+      });
     }
   });
 })();
