@@ -17,3 +17,14 @@ System Monitor uses the following libraries to work.
 
 ## Installing
 First install the dependencies, then run `make`, this will compile all the sources. To start the web server, run `./system_monitor`, that will start the server on port 3000.
+
+## Todos
+- Make compilation easier and more portable (maybe use autoconf and automake)
+- A way to configure
+  - User password
+  - HTTP port
+  - Refresh timeout
+  - What information to display
+- User auth
+- Provide installers for common systems like debian
+- Process detailed information
