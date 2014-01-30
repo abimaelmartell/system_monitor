@@ -9,14 +9,21 @@ Tested on the following systems:
 - FreeBSD
 - OSX
 
-## Dependencies
-System Monitor uses the following libraries to work.
-- [sigar](https://github.com/hyperic/sigar), to collect the system's data.
-- [mongoose](https://github.com/cesanta/mongoose), to serve the user interface.
-- [json-c](https://github.com/json-c/json-c), to share the data between the client and the server.
-
 ## Installing
-First install the dependencies, then run `make`, this will compile all the sources. To start the web server, run `./system_monitor`, that will start the server on port 3000.
+__Prerequisites__
+- GNU autotools/libtool
+- pkg-config
+
+To compile run
+```
+git submodule init
+git submodule update
+make
+```
+
+This will compile all dependencies and sources.
+
+To start the web server, run `./system_monitor`, that will start the server on port 3000.
 
 ## Todos
 - Make compilation easier and more portable (maybe use autoconf and automake)
@@ -26,5 +33,6 @@ First install the dependencies, then run `make`, this will compile all the sourc
   - Refresh timeout
   - What information to display
 - User auth
+- Run as daemon
 - Provide installers for common systems like debian
 - Process detailed information
