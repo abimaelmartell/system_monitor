@@ -47,3 +47,5 @@ $(SIGAR_LIB):
 clean:
 	-rm -f $(OBJECTS)
 	-rm -f $(PROGRAM)
+	cd $(SIGAR_HOME); ./autoclean.sh
+	cd $(JSON_HOME); make clean
