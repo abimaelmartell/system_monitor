@@ -5,7 +5,7 @@
 #include <sigar_private.h>
 #include <sigar_util.h>
 #include <mongoose.h>
-#include <json-c/json.h>
+#include <json.h>
 
 #include "web.h"
 #include "utils.h"

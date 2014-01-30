@@ -12,8 +12,8 @@ JSON_LIB=$(JSON_HOME)/.libs/libjson-c.a
 
 LIB_TARGETS = $(JSON_LIB)
 
-CFLAGS  = -W -Wall -I. -I$(MONGOOSE_INC)
-INC = -I$(MONGOOSE_INC)
+CFLAGS  = -W -Wall -I.
+INC = -I$(MONGOOSE_INC) -I$(JSON_INC)
 LIBS = -ldl -lpthread -lsigar $(JSON_LIB)
 
 .PHONY: default all clean
