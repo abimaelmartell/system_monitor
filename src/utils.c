@@ -1,3 +1,7 @@
+// © 2014 Abimael Martell
+// System Monitor - multi-platform system monitor
+// See LICENSE
+
 #include "system_monitor.h"
 
 char *inet_to_string(sigar_t *sigar, sigar_uint32_t inet){

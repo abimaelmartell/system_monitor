@@ -1,3 +1,7 @@
+// © 2014 Abimael Martell
+// System Monitor - multi-platform system monitor
+// See LICENSE
+
 #define DEFAULT_HTTP_PORT "3000"
 
 #define STATS_JSON_URI "/stats.json"

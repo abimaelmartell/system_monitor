@@ -1,3 +1,7 @@
+// © 2014 Abimael Martell
+// System Monitor - multi-platform system monitor
+// See LICENSE
+
 #include <string.h>
 #include <stdio.h>
 

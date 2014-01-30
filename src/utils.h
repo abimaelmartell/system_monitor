@@ -1,3 +1,7 @@
+// © 2014 Abimael Martell
+// System Monitor - multi-platform system monitor
+// See LICENSE
+
 #define MAC_ADDRESS_FORMAT "%02X:%02X:%02X:%02X:%02X:%02X"
 #define MAC_ADDRESS_STRING_LENGTH 18
 
