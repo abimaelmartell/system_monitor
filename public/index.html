@@ -12,9 +12,8 @@
     <header class="container">
       <h1 class="pull-left"><a href="/#/">System Monitor</a></h1>
       <ul class="list-inline pull-right">
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#processes">Processes</a></li>
-        <li><a href="#network">Network</a></li>
+          <!--<li><a class="btn btn-primary"><i class="fa fa-cog"></i></a></li>-->
+        <li><a class="btn btn-success" data-loading-text="Loading..." data-action="refresh-stats"><i class="fa fa-refresh"></i> Refresh</a></li>
       </ul>
     </header>
     <div class="container" id="main">
@@ -24,7 +23,7 @@
         <a href="http://abimaelmartell.com">Abimael Martell</a>
       </p>
     </footer>
-    <script type="text/template" id="dashboard-template">
+    <script type="text/template" id="system-monitor-template">
       <section class="row mini-boxes">
         <div class="col-sm-4">
           <div class="stat-resume">
@@ -135,9 +134,7 @@
           </tbody>
         </table>
       </section>
-    </script>
 
-    <script type="text/template" id="processes-template">
       <section class="box">
         <h1>Processes</h1>
         <table class="table table-hover table-striped" id="processes-table">
@@ -167,9 +164,7 @@
           </tbody>
         </table>
       </section>
-    </script>
 
-    <script type="text/template" id="network-template">
       <section class="box">
         <h1>Network Interfaces</h1>
         <table class="table table-hover table-striped" id="network-interfaces-table">
@@ -208,15 +203,10 @@
     <script src="/js/vendor/jquery.datatables.js"></script>
     <script src="/js/vendor/jquery.datatables.bootstrap.js"></script>
     <script src="/js/vendor/underscore.js"></script>
-    <script src="/js/vendor/backbone.js"></script>
     <script src="/js/vendor/bootstrap.js"></script>
     <script src="/js/utils.js"></script>
     <script src="/js/custom.js"></script>
     <script src="/js/stats.js"></script>
-    <script src="/js/views/dashboard.js"></script>
-    <script src="/js/views/processes.js"></script>
-    <script src="/js/views/network.js"></script>
-    <script src="/js/router.js"></script>
     <script src="/js/app.js"></script>
   </body>
 </html>
