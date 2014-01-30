@@ -4,3 +4,6 @@
 [submodule "vendor/json-c"]
 	path = vendor/json-c
 	url = https://github.com/json-c/json-c.git
+[submodule "vendor/sigar"]
+	path = vendor/sigar
+	url = https://github.com/hyperic/sigar.git

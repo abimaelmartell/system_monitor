@@ -10,11 +10,21 @@ JSON_HOME = vendor/json-c
 JSON_INC = $(JSON_HOME)
 JSON_LIB=$(JSON_HOME)/.libs/libjson-c.a
 
-LIB_TARGETS = $(JSON_LIB)
+SIGAR_HOME = vendor/sigar
+SIGAR_INC = $(SIGAR_HOME)/include
+SIGAR_LIB=$(SIGAR_HOME)/src/.libs/libsigar.a
+
+LIB_TARGETS = $(JSON_LIB) $(SIGAR_LIB)
 
 CFLAGS  = -W -Wall -I.
-INC = -I$(MONGOOSE_INC) -I$(JSON_INC)
-LIBS = -ldl -lpthread -lsigar $(JSON_LIB)
+INC = -I$(MONGOOSE_INC) -I$(JSON_INC) -I$(SIGAR_INC)
+LIBS = -ldl -lpthread $(JSON_LIB) $(SIGAR_LIB)
+
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Darwin)
+  LIBS += -framework IOKit -framework CoreServices
+endif
 
 .PHONY: default all clean
 
@@ -30,6 +40,9 @@ $(PROGRAM): $(OBJECTS)
 
 $(JSON_LIB):
 	cd $(JSON_HOME); ./autogen.sh; ./configure; make
+
+$(SIGAR_LIB):
+	cd $(SIGAR_HOME); ./autogen.sh; ./configure; make
 
 clean:
 	-rm -f $(OBJECTS)
