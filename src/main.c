@@ -4,7 +4,9 @@
 
 #include "system_monitor.h"
 
-int main(int argc, char *argv[]){
+int main(int argc, char **argv){
+  parse_arguments(argc, argv);
+
   initialize_server();
 
   stop_server(); 

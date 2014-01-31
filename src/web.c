@@ -10,7 +10,7 @@ void initialize_server(void){
   char tmpBuf[100];
   server = mg_create_server(NULL);
 
-  mg_set_option(server, "listening_port", DEFAULT_HTTP_PORT);
+  mg_set_option(server, "listening_port", globalOptions.port);
   mg_set_option(server, "run_as_user", "root");
   mg_set_option(server, "document_root", "public");
 

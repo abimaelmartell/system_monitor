@@ -5,9 +5,33 @@
 #include "system_monitor.h"
 
 sigar_t *sigar;
+struct global_options globalOptions;
 
 void log_line(char *line, int log_level){
   puts(line);
+}
+
+void parse_arguments(int argc, char **argv){
+  int opt, index;
+
+  globalOptions.port = DEFAULT_HTTP_PORT;
+
+  static struct option long_options[] = {
+    {"port", required_argument, 0, 'c'},
+    {0, 0, 0, 0}
+  };
+
+  while(1){
+    opt = getopt_long(argc, argv, "p:", long_options, &index);
+    if(opt == -1)
+      break;
+
+    switch(opt){
+      case 'p':
+        globalOptions.port = optarg;
+        break;
+    }
+  }
 }
 
 json_object * get_stats_json(){
