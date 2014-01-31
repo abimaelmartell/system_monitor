@@ -58,8 +58,8 @@
           <div class="box">
             <h3>RAM Information</h3>
             <h4>Total: <%= memory.total %> MB</h4>
-            <h4>Used: <%= App.Utils.convertBytes(memory.free) %> MB</h4>
-            <h4>Free: <%= App.Utils.convertBytes(memory.used) %> MB</h4>
+            <h4>Used: <%= App.Utils.convertBytes(memory.used) %> MB</h4>
+            <h4>Free: <%= App.Utils.convertBytes(memory.free) %> MB</h4>
           </div>
         </div>
       </section>
