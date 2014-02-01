@@ -13,6 +13,8 @@ void log_line(char *line, int log_level){
 
 void parse_arguments(int argc, char **argv){
   int opt, index;
+  long conv;
+  char *out;
 
   globalOptions.port = DEFAULT_HTTP_PORT;
 
@@ -28,7 +30,13 @@ void parse_arguments(int argc, char **argv){
 
     switch(opt){
       case 'p':
-        globalOptions.port = optarg;
+        conv = strtol(optarg, &out, 10);
+        if(*out){
+          printf("\"%s\" is not a valid port number\n", optarg);
+          exit(1);
+        }else{
+          globalOptions.port = optarg;
+        }
         break;
     }
   }
