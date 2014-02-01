@@ -17,7 +17,7 @@ void parse_arguments(int argc, char **argv){
   globalOptions.port = DEFAULT_HTTP_PORT;
 
   static struct option long_options[] = {
-    {"port", required_argument, 0, 'c'},
+    {"port", required_argument, 0, 'p'},
     {0, 0, 0, 0}
   };
 
