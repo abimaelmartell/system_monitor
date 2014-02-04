@@ -61,11 +61,12 @@ json_object * get_stats_json(){
   sigar_thread_cpu_t proc_threads;
   sigar_net_info_t net_info;
   sigar_sys_info_t sys_info;
+  sigar_loadavg_t load_average;
   json_object *stats_json, *memory_json, *cpu_json, *cores_json, *core_json,
               *file_system_json, *file_systems_json, *file_system_usage_json,
               *net_interfaces_json, *net_interface_json, *net_interface_address_json,
               *net_interface_stat_json, *proc_list_json, *proc_json, *proc_cpu_json,
-              *proc_mem_json, *net_info_json, *sys_info_json;
+              *proc_mem_json, *net_info_json, *sys_info_json, *load_average_json;
   char *stats_string, *state_string;
   int i, primary_interface;
 
@@ -262,6 +263,13 @@ json_object * get_stats_json(){
   json_object_object_add(sys_info_json, "vendor_code_name", json_object_new_string(sys_info.vendor_code_name));
   json_object_object_add(stats_json, "system_info", sys_info_json);
 
+  sigar_loadavg_get(sigar, &load_average);
+  load_average_json = json_object_new_array();
+
+  for(i = 0; i < 3; i++)
+    json_object_array_add(load_average_json, json_object_new_double(load_average.loadavg[i]));
+
+  json_object_object_add(stats_json, "load_average", load_average_json);
 
   sigar_close(sigar);
 
