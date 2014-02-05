@@ -25,19 +25,24 @@
     </footer>
     <script type="text/template" id="system-monitor-template">
       <section class="row mini-boxes">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <div class="stat-resume">
             <h4><%= memory.used_percent %>% <small>RAM Usage</small></h4>
           </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <div class="stat-resume">
             <h4><%= disk_usage_percent %>% <small>Disk Usage</small></h4>
           </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           <div class="stat-resume">
             <h4><%= cpu_usage_percent %>% <small>CPU Usage</small></h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="stat-resume load-average">
+            <h4><%= load_average[0].percent %>% <small>Load Average</small></h4>
           </div>
         </div>
       </section>

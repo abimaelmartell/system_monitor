@@ -31,11 +31,25 @@ window.App = window.App || {};
       return App.Utils.parseSecondsToTimeAgo(this.attributes.uptime);
     }
 
+    this.calculateLoadAveragePercent = function(){
+      var load_average_parsed = new Array()
+        , load_average_percent;
+
+      for(i in this.attributes.load_average)
+        load_average_parsed.push({
+          load_average: (this.attributes.load_average[i]).toFixed(2),
+          percent: Math.round(this.attributes.load_average[i] * 100 / this.attributes.cpu.total_cores)
+        })
+
+      return load_average_parsed;
+    }
+
     this.toJSON = function(){
       var attributes = _.clone(this.attributes);
       attributes.cpu_usage_percent = this.getCPUUsagePercent();
       attributes.disk_usage_percent = this.getDiskUsagePercent();
       attributes.uptime_string = this.getUptimeString();
+      attributes.load_average = this.calculateLoadAveragePercent();
       return attributes;
     }
   }
