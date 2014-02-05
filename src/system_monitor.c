@@ -8,7 +8,18 @@ sigar_t *sigar;
 struct global_options globalOptions;
 
 void log_line(char *line, int log_level){
-  puts(line);
+  time_t current_time;
+  struct tm *p;
+  char time_str[80], tmpBuf[1024];
+
+  current_time = time(NULL);
+  p = localtime(&current_time);
+  strftime(time_str, sizeof(time_str), "%D %r", p);
+
+  if(log_level == LOG_INFO)
+    sprintf(tmpBuf, LOG_INFO_LINE, time_str, line);
+
+  puts(tmpBuf);
 }
 
 void parse_arguments(int argc, char **argv){

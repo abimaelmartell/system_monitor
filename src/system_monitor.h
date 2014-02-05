@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <getopt.h>
+#include <time.h>
 
 #include <sigar.h>
 #include <sigar_private.h>
@@ -20,6 +21,8 @@ enum log_levels{
   LOG_INFO,
   LOG_ERROR
 };
+
+#define LOG_INFO_LINE "\x1B[0;32m[%s] %s"
 
 struct global_options{
   char *port;

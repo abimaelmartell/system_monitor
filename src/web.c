@@ -14,7 +14,7 @@ void initialize_server(void){
   mg_set_option(server, "run_as_user", "root");
   mg_set_option(server, "document_root", "public");
 
-  mg_add_uri_handler(server, STATS_JSON_URI, &stats_json);
+  mg_set_request_handler(server, request_handler);
 
   sprintf(
     tmpBuf,
@@ -30,6 +30,20 @@ void initialize_server(void){
 
 void stop_server(void){
   mg_destroy_server(&server);
+}
+
+int request_handler(struct mg_connection *conn){
+  char tmpBuf[1024];
+
+  sprintf(tmpBuf, "%s %s from %s", conn->request_method, conn->uri, conn->remote_ip);
+
+  log_line(tmpBuf, LOG_INFO);
+
+  if(strcmp(STATS_JSON_URI, conn->uri) == 0){
+    return stats_json(conn);
+  }
+
+  return MG_REQUEST_NOT_PROCESSED;
 }
 
 int stats_json(struct mg_connection *conn){
@@ -48,5 +62,5 @@ int stats_json(struct mg_connection *conn){
     strlen(stats_string)
   );
 
-  return 0;
+  return MG_REQUEST_PROCESSED;
 }
