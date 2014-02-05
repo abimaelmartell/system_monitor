@@ -17,28 +17,26 @@ body {
 h1, h2, h3 {
   margin-top: 0;
 }
-.box,
-.mini-boxes .stat-resume {
+
+.box, .mini-boxes .stat-resume {
   background: #FFF;
   border-radius: 5px;
   padding: 20px;
 }
+
 .mini-boxes {
   margin-bottom: 20px;
 }
-.mini-boxes .stat-resume {
-  height: 100px;
-}
-.mini-boxes .stat-resume h4 {
-  font-size: 40px;
-}
-.mini-boxes .stat-resume h4 small {
-  font-size: 20px;
-}
-.cpu-usage-chart,
-.net-usage-chart {
-  height: 200px;
-}
+  .mini-boxes .stat-resume {
+    height: 100px;
+  }
+    .mini-boxes .stat-resume h4 {
+      font-size: 40px;
+    }
+      .mini-boxes .stat-resume h4 small {
+        font-size: 20px;
+      }
+
 #main > section {
   margin-bottom: 20px;
 }

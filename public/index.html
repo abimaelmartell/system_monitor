@@ -55,8 +55,12 @@
             <h3>System Information</h3>
             <h4>Processor: <span class="text-muted"><%= cpu.vendor + " " + cpu.model %></span></h4>
             <h4>Uptime: <span class="text-muted"><%= uptime_string %></span></h4>
-            <h4>Host Name: <span class="text-muted"><%= network_info.host_name %></span></h4>
             <h4>Operative System: <span class="text-muted"><%= system_info.name + " " + system_info.version + " " + system_info.description + " " + system_info.arch %></span></h4>
+
+            <h3>Network Information <small> Default interface <%= network_info.default_gateway_interface %></small></h3>
+            <h4>Host Name: <span class="text-muted"><%= network_info.host_name %></span></h4>
+            <h4>Default Gateway: <span class="text-muted"><%= network_info.default_gateway %></span></h4>
+            <h4>Primary DNS: <span class="text-muted"><%= network_info.primary_dns %></span></h4>
           </div>
         </div>
         <div class="col-sm-4">
@@ -65,6 +69,11 @@
             <h4>Total: <%= memory.total %> MB</h4>
             <h4>Used: <%= App.Utils.convertBytes(memory.used) %> MB</h4>
             <h4>Free: <%= App.Utils.convertBytes(memory.free) %> MB</h4>
+
+            <h3>Load Average</h3>
+            <h4><%= load_average[0].load + " &raquo; " + load_average[0].percent + "%" %> <small>last minute</small></h4>
+            <h4><%= load_average[1].load + " &raquo; " + load_average[1].percent + "%" %> <small>last 5 minutes</small></h4>
+            <h4><%= load_average[2].load + " &raquo; " + load_average[2].percent + "%" %> <small>last 15 minutes</small></h4>
           </div>
         </div>
       </section>

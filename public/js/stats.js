@@ -37,7 +37,7 @@ window.App = window.App || {};
 
       for(i in this.attributes.load_average)
         load_average_parsed.push({
-          load_average: (this.attributes.load_average[i]).toFixed(2),
+          load: (this.attributes.load_average[i]).toFixed(2),
           percent: Math.round(this.attributes.load_average[i] * 100 / this.attributes.cpu.total_cores)
         })
 
