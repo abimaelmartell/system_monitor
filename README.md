@@ -36,3 +36,4 @@ To start the web server, run `./system_monitor`, that will start the server on p
 - Run as daemon
 - Provide installers for common systems like debian
 - Process detailed information
+- Provide historic cpu, network and memory
