@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>System Monitor</title>
     <link rel="stylesheet" href="/css/vendor/bootstrap.css" media="all"/>
-    <link rel="stylesheet" href="/css/vendor/jquery.datatables.css" media="all"/>
+    <link rel="stylesheet" href="/css/vendor/jquery.dynatable.css" media="all"/>
     <link rel="stylesheet" href="/css/vendor/font-awesome.css" media="all"/>
     <link rel="stylesheet" href="/css/main.css" media="all"/>
   </head>
@@ -138,10 +138,10 @@
               <td><%= file_system.dev %></td>
               <td><%= file_system.type %></td>
               <td><%= file_system.usage.use_percent * 100 %> %</td>
-              <td><%= file_system.usage.total %></td>
-              <td><%= file_system.usage.free %></td>
-              <td><%= file_system.usage.used %></td>
-              <td><%= file_system.usage.available %></td>
+              <td><%= App.Utils.convertKBs(file_system.usage.total) %></td>
+              <td><%= App.Utils.convertKBs(file_system.usage.free) %></td>
+              <td><%= App.Utils.convertKBs(file_system.usage.used) %></td>
+              <td><%= App.Utils.convertKBs(file_system.usage.available) %></td>
               <td><%= file_system.usage.files %></td>
             </tr>
           <% }) %>
@@ -169,7 +169,7 @@
               <td><%= process.pid %></td>
               <td><%= process.name %></td>
               <td><%= process.cpu.percent %></td>
-              <td><%= App.Utils.convertBytes(process.memory.resident) %> MB</td>
+              <td><%= process.memory.resident %></td>
               <td><%= process.user %></td>
               <td><%= process.threads %></td>
               <td><%= process.state %></td>
@@ -189,8 +189,8 @@
               <th>IP Address</th>
               <th>MAC Address</th>
               <th>Speed</th>
-              <th>Transmitted Bytes</th>
-              <th>Received Bytes</th>
+              <th>Transmitted</th>
+              <th>Received</th>
               <th>Transmitted Packets</th>
               <th>Received Packets</th>
             </tr>
@@ -214,12 +214,10 @@
       </section>
     </script>
     <script src="/js/vendor/jquery.js"></script>
-    <script src="/js/vendor/jquery.datatables.js"></script>
-    <script src="/js/vendor/jquery.datatables.bootstrap.js"></script>
+    <script src="/js/vendor/jquery.dynatable.js"></script>
     <script src="/js/vendor/underscore.js"></script>
     <script src="/js/vendor/bootstrap.js"></script>
     <script src="/js/utils.js"></script>
-    <script src="/js/custom.js"></script>
     <script src="/js/stats.js"></script>
     <script src="/js/app.js"></script>
   </body>

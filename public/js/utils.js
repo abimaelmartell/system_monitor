@@ -30,15 +30,17 @@ window.App = window.App || {};
     return ago_string;
   }
 
-  App.Utils.convertBytes = function(bytes, to){
-    var return_val;
-    if(typeof to === 'undefined')
-      to = 'mb';
+  App.Utils.convertBytes = function(bytes, sizes){
+    if(typeof sizes === 'undefined')
+      sizes = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    if (bytes == 0) return 'n/a';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    if (i == 0) { return (bytes / Math.pow(1024, i)) + ' ' + sizes[i]; }
+    return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+  }
 
-    if(to == 'mb')
-      return_val = bytes / 1024 / 1024;
-
-    return Math.floor(return_val);
+  App.Utils.convertKBs = function(kilobytes){
+    return this.convertBytes(kilobytes, ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']);
   }
 
 })();
