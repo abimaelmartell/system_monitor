@@ -10,13 +10,30 @@ window.App = window.App || {};
         return Number(el.innerHTML) || 0;
       },
       writer: function(record){
-        return record[this.id] ? App.Utils.convertBytes(record[this.id]) : 'n/a';
+        return record[this.id] ? App.Utils.convertBytes(record[this.id]) : 0;
+      },
+      writerKB: function(record){
+        return record[this.id] ? App.Utils.convertKBs(record[this.id]) : 0;
       }
     }
 
     this.render = function(){
       $("#main").html(this.template(App.Stats.toJSON()));
-      $("#file-systems-table, #network-interfaces-table, #cpus-table, #processes-table").dynatable();
+      $("#network-interfaces-table, #cpus-table, #processes-table").dynatable();
+      $("#file-systems-table").dynatable({
+        readers: {
+          'total': this.custom_memory_dt.reader,
+          'free': this.custom_memory_dt.reader,
+          'used': this.custom_memory_dt.reader,
+          'total': this.custom_memory_dt.reader
+        },
+        writers: {
+          'total': this.custom_memory_dt.writerKB,
+          'free': this.custom_memory_dt.writerKB,
+          'used': this.custom_memory_dt.writerKB,
+          'available': this.custom_memory_dt.writerKB
+        }
+      });
     }
 
     this.initEvents = function(){

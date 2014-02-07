@@ -137,11 +137,11 @@
               <td><%= file_system.dir %></td>
               <td><%= file_system.dev %></td>
               <td><%= file_system.type %></td>
-              <td><%= file_system.usage.use_percent * 100 %> %</td>
-              <td><%= App.Utils.convertKBs(file_system.usage.total) %></td>
-              <td><%= App.Utils.convertKBs(file_system.usage.free) %></td>
-              <td><%= App.Utils.convertKBs(file_system.usage.used) %></td>
-              <td><%= App.Utils.convertKBs(file_system.usage.available) %></td>
+              <td><%= (file_system.usage.use_percent * 100).toFixed(2) %> %</td>
+              <td><%= file_system.usage.total %></td>
+              <td><%= file_system.usage.free %></td>
+              <td><%= file_system.usage.used %></td>
+              <td><%= file_system.usage.available %></td>
               <td><%= file_system.usage.files %></td>
             </tr>
           <% }) %>

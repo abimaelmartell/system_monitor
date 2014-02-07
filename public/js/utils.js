@@ -33,7 +33,7 @@ window.App = window.App || {};
   App.Utils.convertBytes = function(bytes, sizes){
     if(typeof sizes === 'undefined')
       sizes = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-    if (bytes == 0) return 'n/a';
+    if (bytes == 0) return 0;
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     if (i == 0) { return (bytes / Math.pow(1024, i)) + ' ' + sizes[i]; }
     return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
