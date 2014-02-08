@@ -62,5 +62,7 @@ int stats_json(struct mg_connection *conn){
     strlen(stats_string)
   );
 
+  json_object_put(stats_json);
+
   return MG_REQUEST_PROCESSED;
 }
