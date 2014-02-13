@@ -12,7 +12,10 @@ void initialize_server(void){
 
   mg_set_option(server, "listening_port", globalOptions.port);
   mg_set_option(server, "run_as_user", "root");
+
+#ifdef DEBUG
   mg_set_option(server, "document_root", "public");
+#endif
 
   mg_set_request_handler(server, request_handler);
 
@@ -42,6 +45,28 @@ int request_handler(struct mg_connection *conn){
   if(strcmp(STATS_JSON_URI, conn->uri) == 0){
     return stats_json(conn);
   }
+
+#ifndef DEBUG
+  // serve assets from resources.c
+  size_t asset_size;
+  const char *asset_content = NULL;
+
+  if(strcmp("/", conn->uri) == 0){
+    asset_content = find_embedded_file("public/index.html", &asset_size);
+    mg_send_header(conn, "Content-Type", "text/html");
+  }else if(strcmp("/assets/app.js", conn->uri) == 0){
+    asset_content = find_embedded_file("public/assets/app.js", &asset_size);
+    mg_send_header(conn, "Content-Type", "application/x-javascript");
+  }else if(strcmp("/assets/app.css", conn->uri) == 0){
+    asset_content = find_embedded_file("public/assets/app.css", &asset_size);
+    mg_send_header(conn, "Content-Type", "text/css");
+  }
+
+  if(asset_content != NULL){
+    mg_send_data(conn, asset_content, asset_size);
+    return MG_REQUEST_PROCESSED;
+  }
+#endif
 
   return MG_REQUEST_NOT_PROCESSED;
 }

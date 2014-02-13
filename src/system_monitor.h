@@ -15,6 +15,7 @@
 
 #include "web.h"
 #include "utils.h"
+#include "resources.h"
 
 enum log_levels{
   LOG_WARNING,
