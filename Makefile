@@ -35,7 +35,7 @@ all: default
 %.o: %.c $(HEADERS)
 	gcc -c $< -o $@ $(INC)
 
-$(PROGRAM): $(OBJECTS) resources
+$(PROGRAM): resources $(OBJECTS)
 	gcc $(OBJECTS) $(MONGOOSE_SOURCE) -o $@ $(LIBS)
 
 concat_css:
