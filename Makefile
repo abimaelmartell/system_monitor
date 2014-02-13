@@ -1,5 +1,5 @@
 HEADERS = src/system_monitor.h src/web.h src/utils.h
-OBJECTS = src/main.o src/web.o src/system_monitor.o src/utils.o
+OBJECTS = src/main.o src/web.o src/system_monitor.o src/utils.o src/resources.o
 PROGRAM = system_monitor
 
 MONGOOSE_HOME = vendor/mongoose
@@ -23,7 +23,7 @@ LIBS = -ldl -lpthread $(JSON_LIB) $(SIGAR_LIB)
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-  LIBS += -framework IOKit -framework CoreServices
+	LIBS += -framework IOKit -framework CoreServices
 endif
 
 .PHONY: default all clean
@@ -35,8 +35,27 @@ all: default
 %.o: %.c $(HEADERS)
 	gcc -c $< -o $@ $(INC)
 
-$(PROGRAM): $(OBJECTS)
+$(PROGRAM): $(OBJECTS) resources
 	gcc $(OBJECTS) $(MONGOOSE_SOURCE) -o $@ $(LIBS)
+
+concat_css:
+	cat public/css/vendor/bootstrap.css \
+	    public/css/vendor/jquery.dynatable.css \
+	    public/css/main.css \
+	  > public/assets/app.css
+
+concat_js:
+	cat public/js/vendor/jquery.js \
+	    public/js/vendor/bootstrap.js \
+	    public/js/vendor/underscore.js \
+	    public/js/vendor/jquery.dynatable.js \
+	    public/js/utils.js \
+	    public/js/stats.js \
+	    public/js/app.js \
+	  > public/assets/app.js
+
+resources: concat_js concat_css
+	perl scripts/mkdata.pl public/index.html public/assets/app.js public/assets/app.css > src/resources.c
 
 $(JSON_LIB):
 	cd $(JSON_HOME); ./autogen.sh; ./configure; make
@@ -44,8 +63,11 @@ $(JSON_LIB):
 $(SIGAR_LIB):
 	cd $(SIGAR_HOME); ./autogen.sh; ./configure; make
 
+clean-vendors:
+	cd $(SIGAR_HOME); ./autoclean.sh
+	cd $(JSON_HOME); make clean
+
 clean:
 	-rm -f $(OBJECTS)
 	-rm -f $(PROGRAM)
-	cd $(SIGAR_HOME); ./autoclean.sh
-	cd $(JSON_HOME); make clean
+	-rm -f public/assets/*
