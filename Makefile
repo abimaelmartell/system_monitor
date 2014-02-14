@@ -1,6 +1,7 @@
 HEADERS = src/system_monitor.h src/web.h src/utils.h
 OBJECTS = src/main.o src/web.o src/system_monitor.o src/utils.o src/resources.o
 PROGRAM = system_monitor
+BINDIR = /usr/local/bin
 
 MONGOOSE_HOME = vendor/mongoose
 MONGOOSE_INC = $(MONGOOSE_HOME)
@@ -71,3 +72,9 @@ clean:
 	-rm -f $(OBJECTS)
 	-rm -f $(PROGRAM)
 	-rm -f public/assets/*
+
+install: $(PROGRAM)
+	install -C $(PROGRAM) $(BINDIR)/$(PROGRAM)
+
+uninstall:
+	rm $(BINDIR)/$(PROGRAM)
