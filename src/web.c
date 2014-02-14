@@ -72,8 +72,8 @@ int request_handler(struct mg_connection *conn){
 }
 
 int stats_json(struct mg_connection *conn){
-  json_object *stats_json;
-  char *stats_string;
+  json_object *stats_json = NULL;
+  char *stats_string = NULL;
 
   stats_json = get_stats_json();
 
