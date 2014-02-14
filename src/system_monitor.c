@@ -222,7 +222,6 @@ json_object * get_stats_json(){
       break;
     }
 
-
     json_object_object_add(proc_json, "name",    json_object_new_string(proc_state.name));
     json_object_object_add(proc_json, "pid",     json_object_new_int64(proc_list.data[i]));
     json_object_object_add(proc_json, "state",   json_object_new_string(state_string));

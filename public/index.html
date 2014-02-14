@@ -63,8 +63,8 @@
           <div class="box">
             <h3>RAM Information</h3>
             <h4>Total: <%= memory.total %> MB</h4>
-            <h4>Used: <%= App.Utils.convertBytes(memory.used) %> MB</h4>
-            <h4>Free: <%= App.Utils.convertBytes(memory.free) %> MB</h4>
+            <h4>Used: <%= App.Utils.convertBytes(memory.used) %></h4>
+            <h4>Free: <%= App.Utils.convertBytes(memory.free) %></h4>
 
             <h3>Load Average</h3>
             <h4><%= load_average[0].load + " &raquo; " + load_average[0].percent + "%" %> <small>last minute</small></h4>

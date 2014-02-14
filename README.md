@@ -1,7 +1,7 @@
 # System Monitor
 A multi-platform system monitor, it shows memory usage, cpu usage, file systems, processes and network interfaces through a web interface.
 
-![Screenshot](http://i.imgur.com/4sam7XM.png, "Screenshot")
+![Screenshot](http://i.imgur.com/vrCCj2n.png, "Screenshot")
 
 ## System Support
 Tested on the following systems:
