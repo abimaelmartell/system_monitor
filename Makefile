@@ -19,12 +19,16 @@ LIB_TARGETS = $(JSON_LIB) $(SIGAR_LIB)
 
 CFLAGS  = -W -Wall -I.
 INC = -I$(MONGOOSE_INC) -I$(JSON_INC) -I$(SIGAR_INC)
-LIBS = -ldl -lpthread $(JSON_LIB) $(SIGAR_LIB)
+LIBS = -lpthread $(JSON_LIB) $(SIGAR_LIB)
 
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
 	LIBS += -framework IOKit -framework CoreServices
+endif
+
+ifeq ($(UNAME_S),FreeBSD)
+	LIBS += -lkvm
 endif
 
 .PHONY: default all clean
