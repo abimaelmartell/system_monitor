@@ -24,9 +24,11 @@ enum log_levels{
 };
 
 #define LOG_INFO_LINE "\x1B[0;32m[%s] %s"
+#define CONST_RFC1945_TIME_FORMAT "%a, %d %b %Y %H:%M:%S GMT"
 
 struct global_options{
   char *port;
+  time_t start_time;
 };
 
 extern sigar_t *sigar;

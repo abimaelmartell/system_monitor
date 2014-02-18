@@ -3,8 +3,8 @@
 // See LICENSE
 
 #define DEFAULT_HTTP_PORT "3000"
-
 #define STATS_JSON_URI "/stats.json"
+#define CACHE_LIMIT 290304000
 
 extern struct mg_server *server;
 

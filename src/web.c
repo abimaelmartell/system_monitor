@@ -49,7 +49,21 @@ int request_handler(struct mg_connection *conn){
 #ifndef DEBUG
   // serve assets from resources.c
   size_t asset_size;
-  const char *asset_content = NULL;
+  const char *asset_content = NULL, *if_modifier_since_header = NULL;
+  char date_str[48], cache_control[58], expires[48], last_modified[48];
+  time_t current_time, expires_time;
+  struct tm *p, *if_modifier_since;
+
+  current_time = time(NULL);
+  p = gmtime(&current_time);
+
+  if_modifier_since_header = mg_get_header(conn, "If-Modified-Since");
+  if(if_modifier_since_header){
+    strptime(if_modifier_since_header, CONST_RFC1945_TIME_FORMAT, if_modifier_since);
+    if(mktime(if_modifier_since) < mktime(p)){
+      mg_send_status(conn, 304);
+    }
+  }
 
   if(strcmp("/", conn->uri) == 0){
     asset_content = find_embedded_file("public/index.html", &asset_size);
@@ -63,6 +77,20 @@ int request_handler(struct mg_connection *conn){
   }
 
   if(asset_content != NULL){
+    strftime(date_str, sizeof(date_str), CONST_RFC1945_TIME_FORMAT, p);
+    sprintf(cache_control, "max-age=%d, must-revalidate, public", CACHE_LIMIT);
+
+    expires_time = time(NULL) + CACHE_LIMIT;
+    p = gmtime(&expires_time);
+    strftime(expires, sizeof(expires), CONST_RFC1945_TIME_FORMAT, p);
+
+    p = gmtime(&globalOptions.start_time);
+    strftime(last_modified, sizeof(last_modified), CONST_RFC1945_TIME_FORMAT, p);
+
+    mg_send_header(conn, "Date", date_str);
+    mg_send_header(conn, "Cache-Control", cache_control);
+    mg_send_header(conn, "Expires", expires);
+    mg_send_header(conn, "Last-Modified", last_modified);
     mg_send_data(conn, asset_content, asset_size);
     return MG_REQUEST_PROCESSED;
   }
