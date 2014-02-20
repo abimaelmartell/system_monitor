@@ -49,49 +49,63 @@ int request_handler(struct mg_connection *conn){
 #ifndef DEBUG
   // serve assets from resources.c
   size_t asset_size;
+  int is_modified = 0;
   const char *asset_content = NULL, *if_modifier_since_header = NULL;
   char date_str[48], cache_control[58], expires[48], last_modified[48];
-  time_t current_time, expires_time;
-  struct tm *p, *if_modifier_since;
+  time_t current_time, expires_time, if_modified_time, modified_time;
+  struct tm *current_time_tm, *expires_tm, if_modifier_since, *last_modified_tm;
 
-  current_time = time(NULL);
-  p = gmtime(&current_time);
+  last_modified_tm = gmtime(&globalOptions.start_time);
+  strftime(last_modified, sizeof(last_modified), CONST_RFC1945_TIME_FORMAT, last_modified_tm);
 
   if_modifier_since_header = mg_get_header(conn, "If-Modified-Since");
+
   if(if_modifier_since_header){
-    strptime(if_modifier_since_header, CONST_RFC1945_TIME_FORMAT, if_modifier_since);
-    if(mktime(if_modifier_since) < mktime(p)){
+    strptime(if_modifier_since_header, CONST_RFC1945_TIME_FORMAT, &if_modifier_since);
+    if_modified_time = mktime(&if_modifier_since);
+    modified_time = mktime(last_modified_tm);
+
+    if(modified_time <= if_modified_time){
       mg_send_status(conn, 304);
+      is_modified = 1;
     }
   }
 
   if(strcmp("/", conn->uri) == 0){
     asset_content = find_embedded_file("public/index.html", &asset_size);
-    mg_send_header(conn, "Content-Type", "text/html");
+    mg_send_header(conn, "Content-Type", "text/html; charset=utf-8");
   }else if(strcmp("/assets/app.js", conn->uri) == 0){
     asset_content = find_embedded_file("public/assets/app.js", &asset_size);
-    mg_send_header(conn, "Content-Type", "application/x-javascript");
+    mg_send_header(conn, "Content-Type", "application/x-javascript; charset=utf-8");
   }else if(strcmp("/assets/app.css", conn->uri) == 0){
     asset_content = find_embedded_file("public/assets/app.css", &asset_size);
-    mg_send_header(conn, "Content-Type", "text/css");
+    mg_send_header(conn, "Content-Type", "text/css; charset=utf-8");
   }
 
   if(asset_content != NULL){
-    strftime(date_str, sizeof(date_str), CONST_RFC1945_TIME_FORMAT, p);
-    sprintf(cache_control, "max-age=%d, must-revalidate, public", CACHE_LIMIT);
+    current_time = time(NULL);
+    current_time_tm = gmtime(&current_time);
+    strftime(date_str, sizeof(date_str), CONST_RFC1945_TIME_FORMAT, current_time_tm);
+
+    sprintf(cache_control, "max-age=%d, public", CACHE_LIMIT);
 
     expires_time = time(NULL) + CACHE_LIMIT;
-    p = gmtime(&expires_time);
-    strftime(expires, sizeof(expires), CONST_RFC1945_TIME_FORMAT, p);
-
-    p = gmtime(&globalOptions.start_time);
-    strftime(last_modified, sizeof(last_modified), CONST_RFC1945_TIME_FORMAT, p);
+    expires_tm = gmtime(&expires_time);
+    strftime(expires, sizeof(expires), CONST_RFC1945_TIME_FORMAT, expires_tm);
 
     mg_send_header(conn, "Date", date_str);
     mg_send_header(conn, "Cache-Control", cache_control);
+    mg_send_header(conn, "Vary", "Accept-Encoding");
     mg_send_header(conn, "Expires", expires);
-    mg_send_header(conn, "Last-Modified", last_modified);
-    mg_send_data(conn, asset_content, asset_size);
+
+    if(is_modified == 0){
+      mg_send_header(conn, "Last-Modified", last_modified);
+      mg_send_data(conn, asset_content, asset_size);
+    }else{
+      // close connection
+      mg_send_data(conn, "\r\n", 2);
+    }
+
     return MG_REQUEST_PROCESSED;
   }
 #endif
@@ -107,7 +121,8 @@ int stats_json(struct mg_connection *conn){
 
   stats_string = (char *) json_object_to_json_string(stats_json);
 
-  mg_send_header(conn, "Content-type", "application/json; charset=utf-8");
+  mg_send_header(conn, "Content-Type", "application/json; charset=utf-8");
+  mg_send_header(conn, "Cache-Control", "no-cache");
 
   mg_send_data(
     conn,
