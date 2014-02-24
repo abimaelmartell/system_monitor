@@ -77,13 +77,15 @@ json_object * get_stats_json(){
   sigar_net_info_t net_info;
   sigar_sys_info_t sys_info;
   sigar_loadavg_t load_average;
+  sigar_proc_args_t proc_args;
   json_object *stats_json, *memory_json, *cpu_json, *cores_json, *core_json,
               *file_system_json, *file_systems_json, *file_system_usage_json,
               *net_interfaces_json, *net_interface_json, *net_interface_address_json,
               *net_interface_stat_json, *proc_list_json, *proc_json, *proc_cpu_json,
-              *proc_mem_json, *net_info_json, *sys_info_json, *load_average_json;
+              *proc_mem_json, *net_info_json, *sys_info_json, *load_average_json,
+              *proc_args_json;
   char *stats_string, *state_string;
-  int i, primary_interface;
+  int i, p, primary_interface;
 
   sigar_open(&sigar);
   sigar_mem_get(sigar, &memory);
@@ -197,11 +199,13 @@ json_object * get_stats_json(){
   sigar_proc_list_get(sigar, &proc_list);
   proc_list_json = json_object_new_array();
   for(i = 0; i < proc_list.number; i++){
-    sigar_proc_state_get(sigar, proc_list.data[i], &proc_state);
-    sigar_proc_cpu_get(sigar, proc_list.data[i], &proc_cpu);
-    sigar_proc_cred_name_get(sigar, proc_list.data[i], &proc_cred);
-    sigar_proc_mem_get(sigar, proc_list.data[i], &proc_mem);
-    sigar_thread_cpu_get(sigar, proc_list.data[i], &proc_threads);
+    int pid = proc_list.data[i];
+
+    sigar_proc_state_get(sigar, pid, &proc_state);
+    sigar_proc_cpu_get(sigar, pid, &proc_cpu);
+    sigar_proc_cred_name_get(sigar, pid, &proc_cred);
+    sigar_proc_mem_get(sigar, pid, &proc_mem);
+    sigar_thread_cpu_get(sigar, pid, &proc_threads);
 
     proc_json = json_object_new_object();
 
@@ -227,7 +231,7 @@ json_object * get_stats_json(){
     }
 
     json_object_object_add(proc_json, "name",    json_object_new_string(proc_state.name));
-    json_object_object_add(proc_json, "pid",     json_object_new_int64(proc_list.data[i]));
+    json_object_object_add(proc_json, "pid",     json_object_new_int64(pid));
     json_object_object_add(proc_json, "state",   json_object_new_string(state_string));
     json_object_object_add(proc_json, "user",    json_object_new_string(proc_cred.user));
     json_object_object_add(proc_json, "threads", json_object_new_int(proc_state.threads));
@@ -239,7 +243,7 @@ json_object * get_stats_json(){
     json_object_object_add(proc_cpu_json, "total", json_object_new_int64(proc_cpu.total));
     json_object_object_add(proc_cpu_json, "last_time", json_object_new_int64(proc_cpu.last_time));
     json_object_object_add(proc_cpu_json, "percent", json_object_new_double(proc_cpu.percent));
-    json_object_object_add(proc_json, "cpu",  proc_cpu_json);
+    json_object_object_add(proc_json,     "cpu",  proc_cpu_json);
 
     proc_mem_json = json_object_new_object();
     json_object_object_add(proc_mem_json, "size", json_object_new_int64(proc_mem.size));
@@ -248,7 +252,17 @@ json_object * get_stats_json(){
     json_object_object_add(proc_mem_json, "minor_faults", json_object_new_int64(proc_mem.minor_faults));
     json_object_object_add(proc_mem_json, "major_faults", json_object_new_int64(proc_mem.major_faults));
     json_object_object_add(proc_mem_json, "page_faults", json_object_new_double(proc_mem.page_faults));
-    json_object_object_add(proc_json, "memory",  proc_mem_json);
+    json_object_object_add(proc_json,     "memory",  proc_mem_json);
+
+    proc_args_json = json_object_new_array();
+    sigar_proc_args_get(sigar, pid, &proc_args);
+
+    for(p = 0; p < proc_args.number; p++){
+      json_object_array_add(proc_args_json, json_object_new_string(proc_args.data[p]));
+    }
+
+    json_object_object_add(proc_json, "arguments", proc_args_json);
+    sigar_proc_args_destroy(sigar, &proc_args);
 
     json_object_array_add(proc_list_json, proc_json);
   }
@@ -261,7 +275,7 @@ json_object * get_stats_json(){
   json_object_object_add(net_info_json, "default_gateway", json_object_new_string(net_info.default_gateway));
   json_object_object_add(net_info_json, "default_gateway_interface", json_object_new_string(net_info.default_gateway_interface));
   json_object_object_add(net_info_json, "primary_dns", json_object_new_string(net_info.primary_dns));
-  json_object_object_add(stats_json, "network_info", net_info_json);
+  json_object_object_add(stats_json,    "network_info", net_info_json);
 
   sys_info_json = json_object_new_object();
   sigar_sys_info_get(sigar, &sys_info);
@@ -275,7 +289,7 @@ json_object * get_stats_json(){
   json_object_object_add(sys_info_json, "vendor_version", json_object_new_string(sys_info.vendor_version));
   json_object_object_add(sys_info_json, "vendor_name", json_object_new_string(sys_info.vendor_name));
   json_object_object_add(sys_info_json, "vendor_code_name", json_object_new_string(sys_info.vendor_code_name));
-  json_object_object_add(stats_json, "system_info", sys_info_json);
+  json_object_object_add(stats_json,    "system_info", sys_info_json);
 
   sigar_loadavg_get(sigar, &load_average);
   load_average_json = json_object_new_array();
