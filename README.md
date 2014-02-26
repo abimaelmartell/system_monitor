@@ -16,8 +16,6 @@ __Prerequisites__
 
 To compile run
 ```
-git submodule init
-git submodule update
 make
 ```
 
