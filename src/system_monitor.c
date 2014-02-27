@@ -84,8 +84,9 @@ json_object * get_stats_json(){
               *net_interface_stat_json, *proc_list_json, *proc_json, *proc_cpu_json,
               *proc_mem_json, *net_info_json, *sys_info_json, *load_average_json,
               *proc_args_json;
-  char *stats_string, *state_string;
-  int i, p, primary_interface;
+  char *state_string;
+  int primary_interface;
+  unsigned int i, p;
 
   sigar_open(&sigar);
   sigar_mem_get(sigar, &memory);
