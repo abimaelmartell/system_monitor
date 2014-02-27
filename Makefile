@@ -3,6 +3,22 @@ OBJECTS = src/main.o src/web.o src/system_monitor.o src/utils.o src/resources.o
 PROGRAM = system_monitor
 BINDIR = /usr/local/bin
 
+JS_SOURCES = public/js/vendor/jquery.js \
+	public/js/vendor/bootstrap.js \
+	public/js/vendor/underscore.js \
+	public/js/vendor/jquery.dynatable.js \
+	public/js/utils.js \
+	public/js/stats.js \
+	public/js/app.js
+
+JS_DEST = public/assets/app.js
+
+CSS_SOURCES = public/css/vendor/bootstrap.css \
+	public/css/vendor/jquery.dynatable.css \
+	public/css/main.css
+
+CSS_DEST = public/assets/app.css
+
 MONGOOSE_HOME = vendor/mongoose
 MONGOOSE_INC = $(MONGOOSE_HOME)
 MONGOOSE_SOURCE = $(MONGOOSE_HOME)/mongoose.c
@@ -17,7 +33,7 @@ SIGAR_LIB=$(SIGAR_HOME)/src/.libs/libsigar.a
 
 LIB_TARGETS = $(JSON_LIB) $(SIGAR_LIB)
 
-CFLAGS  = -W -Wall -I.
+CFLAGS = -I. -std=c99 -W -Wall -Werror -Wextra
 INC = -I$(MONGOOSE_INC) -I$(JSON_INC) -I$(SIGAR_INC)
 LIBS = -lpthread $(JSON_LIB) $(SIGAR_LIB)
 
@@ -38,28 +54,18 @@ default: $(LIB_TARGETS) $(PROGRAM)
 all: default
 
 %.o: %.c $(HEADERS)
-	gcc -c $< -o $@ $(INC)
+	gcc -c $< -o $@ $(INC) $(CFLAGS)
 
-$(PROGRAM): resources $(OBJECTS)
+$(PROGRAM): $(OBJECTS)
 	gcc $(OBJECTS) $(MONGOOSE_SOURCE) -o $@ $(LIBS)
 
-concat_css:
-	cat public/css/vendor/bootstrap.css \
-	    public/css/vendor/jquery.dynatable.css \
-	    public/css/main.css \
-	  > public/assets/app.css
+$(CSS_DEST):
+	cat $(CSS_SOURCES) > $(CSS_DEST)
 
-concat_js:
-	cat public/js/vendor/jquery.js \
-	    public/js/vendor/bootstrap.js \
-	    public/js/vendor/underscore.js \
-	    public/js/vendor/jquery.dynatable.js \
-	    public/js/utils.js \
-	    public/js/stats.js \
-	    public/js/app.js \
-	  > public/assets/app.js
+$(JS_DEST):
+	cat $(JS_SOURCES) > $(JS_DEST)
 
-resources: concat_js concat_css
+src/resources.c: $(JS_DEST) $(CSS_DEST)
 	perl scripts/mkdata.pl public/index.html public/assets/app.js public/assets/app.css > src/resources.c
 
 $(JSON_LIB):
