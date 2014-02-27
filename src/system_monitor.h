@@ -23,7 +23,7 @@ enum log_levels{
   LOG_ERROR
 };
 
-#define LOG_INFO_LINE "\x1B[0;32m[%s] %s"
+#define LOG_INFO_LINE "[%s] %s"
 #define CONST_RFC1945_TIME_FORMAT "%a, %d %b %Y %H:%M:%S GMT"
 
 struct global_options{
