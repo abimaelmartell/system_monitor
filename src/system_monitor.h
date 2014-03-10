@@ -17,23 +17,23 @@
 #include "utils.h"
 #include "resources.h"
 
-enum log_levels{
-  LOG_WARNING,
-  LOG_INFO,
-  LOG_ERROR
+enum log_levels {
+    LOG_WARNING,
+    LOG_INFO,
+    LOG_ERROR
 };
 
 #define LOG_INFO_LINE "[%s] %s"
 #define CONST_RFC1945_TIME_FORMAT "%a, %d %b %Y %H:%M:%S GMT"
 
-struct global_options{
-  char *port;
-  time_t start_time;
+struct global_options {
+    char *port;
+    time_t start_time;
 };
 
 extern sigar_t *sigar;
 extern struct global_options globalOptions;
 
-extern void log_line(char *line, int level);
-extern json_object * get_stats_json();
-extern void parse_arguments(int argc, char **argv);
+extern void log_line (char *line, int level);
+extern json_object * get_stats_json (void);
+extern void parse_arguments (int argc, char **argv);

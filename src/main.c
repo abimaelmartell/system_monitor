@@ -4,12 +4,13 @@
 
 #include "system_monitor.h"
 
-int main(int argc, char **argv){
-  parse_arguments(argc, argv);
+int main (int argc, char **argv)
+{
+    parse_arguments(argc, argv);
 
-  initialize_server();
+    initialize_server();
 
-  stop_server(); 
+    stop_server(); 
 
-  return 0;
+    return 0;
 }
