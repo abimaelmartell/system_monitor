@@ -52,6 +52,14 @@ window.App = window.App || {};
       attributes.load_average = this.calculateLoadAveragePercent();
       return attributes;
     }
+
+    this.findProcessByPID = function(pid){
+      var processes = this.toJSON().processes;
+
+      return _.find(processes, function(el){
+        return pid == el.pid;
+      });
+    }
   }
 
   App.Stats = new Stats;

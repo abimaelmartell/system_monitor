@@ -80,12 +80,13 @@ json_object * get_stats_json (void)
     sigar_sys_info_t sys_info;
     sigar_loadavg_t load_average;
     sigar_proc_args_t proc_args;
+    sigar_proc_exe_t proc_exe;
     json_object *stats_json, *memory_json, *cpu_json, *cores_json, *core_json,
                 *file_system_json, *file_systems_json, *file_system_usage_json,
                 *net_interfaces_json, *net_interface_json, *net_interface_address_json,
                 *net_interface_stat_json, *proc_list_json, *proc_json, *proc_cpu_json,
                 *proc_mem_json, *net_info_json, *sys_info_json, *load_average_json,
-                *proc_args_json;
+                *proc_args_json, *proc_exe_json;
     char *state_string;
     int primary_interface;
     unsigned int i, p;
@@ -243,6 +244,7 @@ json_object * get_stats_json (void)
         json_object_object_add(proc_json, "pid",     json_object_new_int64(pid));
         json_object_object_add(proc_json, "state",   json_object_new_string(state_string));
         json_object_object_add(proc_json, "user",    json_object_new_string(proc_cred.user));
+        json_object_object_add(proc_json, "group",   json_object_new_string(proc_cred.group));
         json_object_object_add(proc_json, "threads", json_object_new_int(proc_state.threads));
 
         proc_cpu_json = json_object_new_object();
@@ -272,6 +274,14 @@ json_object * get_stats_json (void)
 
         json_object_object_add(proc_json, "arguments", proc_args_json);
         sigar_proc_args_destroy(sigar, &proc_args);
+
+        sigar_proc_exe_get(sigar, pid, &proc_exe);
+        proc_exe_json = json_object_new_object();
+        json_object_object_add(proc_exe_json, "name", json_object_new_string(proc_exe.name));
+        json_object_object_add(proc_exe_json, "cwd", json_object_new_string(proc_exe.cwd));
+        json_object_object_add(proc_exe_json, "root", json_object_new_string(proc_exe.root));
+
+        json_object_object_add(proc_json, "exe", proc_exe_json);
 
         json_object_array_add(proc_list_json, proc_json);
     }

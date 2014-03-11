@@ -34,6 +34,24 @@ window.App = window.App || {};
           'available': this.custom_memory_dt.writerKB
         }
       });
+
+      $('#processes-table tbody').on('click', 'tr', function(){
+        var pid = $(this).find('td').first().text()
+          , template = _.template($('#process-modal-template').html())
+          , process = App.Stats.findProcessByPID(pid)
+          , modal;
+
+        if(typeof process == 'undefined'){
+          return false;
+        }
+
+        $("#process-modal").remove();
+
+        modal = template(process);
+
+        $('body').append(modal);
+        $("#process-modal").modal();
+      });
     }
 
     this.initEvents = function(){
