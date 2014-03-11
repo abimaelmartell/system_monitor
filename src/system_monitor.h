@@ -2,14 +2,14 @@
 // System Monitor - multi-platform system monitor
 // See LICENSE
 
+#define _GNU_SOURCE
+
 #include <string.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <time.h>
 
 #include <sigar.h>
-#include <sigar_private.h>
-#include <sigar_util.h>
 #include <mongoose.h>
 #include <json.h>
 

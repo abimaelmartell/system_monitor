@@ -27,7 +27,6 @@ void log_line (char *line, int log_level)
 void parse_arguments (int argc, char **argv)
 {
     int opt, index;
-    long conv;
     char *out;
 
     globalOptions.port = DEFAULT_HTTP_PORT;
@@ -47,7 +46,7 @@ void parse_arguments (int argc, char **argv)
 
         switch (opt) {
             case 'p':
-                conv = strtol(optarg, &out, 10);
+                strtol(optarg, &out, 10);
                 if (*out) {
                     printf("\"%s\" is not a valid port number\n", optarg);
                     exit(1);
@@ -183,7 +182,7 @@ json_object * get_stats_json (void)
 
 
         net_interface_address_json = json_object_new_object();
-        json_object_object_add(net_interface_address_json, "ip", json_object_new_string(inet_to_string(sigar, net_interface_config.address.addr.in)));
+        json_object_object_add(net_interface_address_json, "ip", json_object_new_string(inet_to_string(net_interface_config.address.addr.in)));
         json_object_object_add(net_interface_address_json, "mac", json_object_new_string(mac_address_to_string(net_interface_config.hwaddr.addr.mac)));
         json_object_object_add(net_interface_json, "address", net_interface_address_json);
 
