@@ -33,7 +33,7 @@ SIGAR_LIB=$(SIGAR_HOME)/src/.libs/libsigar.a
 
 LIB_TARGETS = $(JSON_LIB) $(SIGAR_LIB)
 
-CFLAGS = -I. -std=c99 -W -Wall -Werror -Wextra
+CFLAGS = -I. -std=c99 -W -Wall -Wextra
 INC = -I$(MONGOOSE_INC) -I$(JSON_INC) -I$(SIGAR_INC)
 LIBS = -lpthread $(JSON_LIB) $(SIGAR_LIB)
 
