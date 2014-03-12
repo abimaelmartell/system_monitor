@@ -4,9 +4,10 @@ PROGRAM = system_monitor
 BINDIR = /usr/local/bin
 
 JS_SOURCES = public/js/vendor/jquery.js \
+	public/js/vendor/jquery.dynatable.js \
 	public/js/vendor/bootstrap.js \
 	public/js/vendor/underscore.js \
-	public/js/vendor/jquery.dynatable.js \
+	public/js/vendor/backbone.js \
 	public/js/utils.js \
 	public/js/stats.js \
 	public/js/app.js

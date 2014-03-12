@@ -1,95 +1,90 @@
 window.App = window.App || {};
-(function(){
-  var SystemMonitor = function(){
-    var _this = this;
+(function() {
 
-    this.template = _.template($("#system-monitor-template").html());
-
-    this.custom_memory_dt = {
-      reader: function(el, record){
-        return Number(el.innerHTML) || 0;
-      },
-      writer: function(record){
-        return record[this.id] ? App.Utils.convertBytes(record[this.id]) : 0;
-      },
-      writerKB: function(record){
-        return record[this.id] ? App.Utils.convertKBs(record[this.id]) : 0;
-      }
-    }
-
-    this.render = function(){
-      $("#main").html(this.template(App.Stats.toJSON()));
-      $("#network-interfaces-table, #cpus-table, #processes-table").dynatable();
-      $("#file-systems-table").dynatable({
-        readers: {
-          'total': this.custom_memory_dt.reader,
-          'free': this.custom_memory_dt.reader,
-          'used': this.custom_memory_dt.reader,
-          'total': this.custom_memory_dt.reader
+    var Router = Backbone.Router.extend({
+        routes: {
+            "": "home"
         },
-        writers: {
-          'total': this.custom_memory_dt.writerKB,
-          'free': this.custom_memory_dt.writerKB,
-          'used': this.custom_memory_dt.writerKB,
-          'available': this.custom_memory_dt.writerKB
+
+        home: function() {
+            this.render_home();
+            
+            var _this = this;
+            $("[data-action='refresh-stats']").on('click', function() {
+                App.Stats.fetch()
+                    .done(function() {
+                        _this.render_home();
+                    })
+            });
+        },
+
+        render_home: function() {
+            var view = this.showView("#main", new App.HomeView);
+
+            // init dynatable
+            $("#cpus-table").dynatable();
+
+            $("#file-systems-table").dynatable({
+                readers: {
+                    total: App.Utils.reader,
+                    free: App.Utils.reader,
+                    used: App.Utils.reader,
+                    available: App.Utils.reader,
+                    files: App.Utils.reader
+                },
+                writers: {
+                    total: App.Utils.writer,
+                    free: App.Utils.writer,
+                    used: App.Utils.writer,
+                    available: App.Utils.writer
+                }
+            });
+
+            $("#processes-table").dynatable({
+                readers: {
+                    pid: App.Utils.reader,
+                    memory: App.Utils.reader,
+                    threads: App.Utils.reader
+                },
+                writers: {
+                    memory: App.Utils.writer
+                }
+            });
+
+            $("#network-interfaces-table").dynatable({
+                readers: {
+                    speed: App.Utils.reader,
+                    transmitted: App.Utils.reader,
+                    received: App.Utils.reader,
+                    transmittedPackets: App.Utils.reader,
+                    receivedPackets: App.Utils.reader
+                },
+                writers: {
+                    speed: App.Utils.writer,
+                    transmitted: App.Utils.writer,
+                    received: App.Utils.writer
+                }
+            });
+        },
+
+        showView: function(selector, view) {
+            if(this.currentView){
+                this.currentView.remove();
+                this.currentView.unbind();
+            }
+
+            $(selector).html(view.render().el);
+
+            this.currentView = view;
+
+            return view;
         }
-      });
+    });
 
-      $('#processes-table tbody').on('click', 'tr', function(){
-        var pid = $(this).find('td').first().text()
-          , template = _.template($('#process-modal-template').html())
-          , process = App.Stats.findProcessByPID(pid)
-          , modal;
-
-        if(typeof process == 'undefined'){
-          return false;
-        }
-
-        $("#process-modal").remove();
-
-        modal = template(process);
-
-        $('body').append(modal);
-        $("#process-modal").modal();
-      });
-    }
-
-    this.initEvents = function(){
-      $("[data-action='refresh-stats']").on("click", function(){
-        var btn = $(this);
-        btn.button('loading');
-        App.Stats.fetch(function(){
-          _this.render();
-          btn.button('reset');
+    App.Stats.fetch()
+        .done(function(){
+            App.Router = new Router();
+            Backbone.history.start();
         })
-      });
-
-      $.dynatableSetup({
-        readers: {
-          'memory': this.custom_memory_dt.reader,
-          'speed': this.custom_memory_dt.reader,
-          'transmitted': this.custom_memory_dt.reader,
-          'received': this.custom_memory_dt.reader
-        },
-        writers: {
-          'memory': this.custom_memory_dt.writer,
-          'speed': this.custom_memory_dt.writer,
-          'transmitted': this.custom_memory_dt.writer,
-          'received': this.custom_memory_dt.writer
-        }
-      });
-    }
-
-    this.init = function(){
-      App.Stats.fetch(function(){
-        _this.render();
-      })
-    }
-
-    this.initEvents();
-
-    return this.init();
-  }
-
-  window.App.SystemMonitor = new SystemMonitor();
+    ;
 })();

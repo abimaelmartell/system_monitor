@@ -1,22 +1,22 @@
 <section class="row mini-boxes">
     <div class="col-sm-3">
         <div class="stat-resume">
-            <h4><%= memory.used_percent %>% <small>RAM Usage</small></h4>
+            <h4><%= stats.memory.used_percent %>% <small>RAM Usage</small></h4>
         </div>
     </div>
     <div class="col-sm-3">
         <div class="stat-resume">
-            <h4><%= disk_usage_percent %>% <small>Disk Usage</small></h4>
+            <h4><%= stats.disk_usage_percent %>% <small>Disk Usage</small></h4>
         </div>
     </div>
     <div class="col-sm-3">
         <div class="stat-resume">
-            <h4><%= cpu_usage_percent %>% <small>CPU Usage</small></h4>
+            <h4><%= stats.cpu_usage_percent %>% <small>CPU Usage</small></h4>
         </div>
     </div>
     <div class="col-sm-3">
         <div class="stat-resume load-average">
-            <h4><%= load_average[0].percent %>% <small>Load Average</small></h4>
+            <h4><%= stats.load_average[0].percent %>% <small>Load Average</small></h4>
         </div>
     </div>
 </section>
@@ -25,33 +25,31 @@
     <div class="col-sm-8">
         <div class="box">
             <h3>System Information</h3>
-            <h4>Processor: <span class="text-muted"><%= cpu.vendor + " " + cpu.model %></span></h4>
-            <h4>Uptime: <span class="text-muted"><%= uptime_string %></span></h4>
-            <h4>Operative System: <span class="text-muted"><%= system_info.name + " " + system_info.version + " " + system_info.description + " " + system_info.arch %></span></h4>
+            <h4>Processor: <span class="text-muted"><%= stats.cpu.vendor + " " + stats.cpu.model %></span></h4>
+            <h4>Uptime: <span class="text-muted"><%= stats.uptime_string %></span></h4>
+            <h4>Operative System: <span class="text-muted"><%= stats.system_info.name + " " + stats.system_info.version + " " + stats.system_info.description + " " + stats.system_info.arch %></span></h4>
 
-            <h3>Network Information <small> Default interface <%= network_info.default_gateway_interface %></small></h3>
-            <h4>Host Name: <span class="text-muted"><%= network_info.host_name %></span></h4>
-            <h4>Default Gateway: <span class="text-muted"><%= network_info.default_gateway %></span></h4>
-            <h4>Primary DNS: <span class="text-muted"><%= network_info.primary_dns %></span></h4>
+            <h3>Network Information <small> Default interface <%= stats.network_info.default_gateway_interface %></small></h3>
+            <h4>Host Name: <span class="text-muted"><%= stats.network_info.host_name %></span></h4>
+            <h4>Default Gateway: <span class="text-muted"><%= stats.network_info.default_gateway %></span></h4>
+            <h4>Primary DNS: <span class="text-muted"><%= stats.network_info.primary_dns %></span></h4>
         </div>
     </div>
     <div class="col-sm-4">
         <div class="box">
             <h3>RAM Information</h3>
-            <h4>Total: <%= memory.total %> MB</h4>
-            <h4>Used: <%= App.Utils.convertBytes(memory.used) %></h4>
-            <h4>Free: <%= App.Utils.convertBytes(memory.free) %></h4>
+            <h4>Total: <%= stats.memory.total %> MB</h4>
+            <h4>Used: <%= App.Utils.convertBytes(stats.memory.used) %></h4>
+            <h4>Free: <%= App.Utils.convertBytes(stats.memory.free) %></h4>
 
             <h3>Load Average</h3>
-            <h4><%= load_average[0].load + " &raquo; " + load_average[0].percent + "%" %> <small>last minute</small></h4>
-            <h4><%= load_average[1].load + " &raquo; " + load_average[1].percent + "%" %> <small>last 5 minutes</small></h4>
-            <h4><%= load_average[2].load + " &raquo; " + load_average[2].percent + "%" %> <small>last 15 minutes</small></h4>
+            <h4><%= stats.load_average[0].load + " &raquo; " + stats.load_average[0].percent + "%" %> <small>last minute</small></h4>
+            <h4><%= stats.load_average[1].load + " &raquo; " + stats.load_average[1].percent + "%" %> <small>last 5 minutes</small></h4>
+            <h4><%= stats.load_average[2].load + " &raquo; " + stats.load_average[2].percent + "%" %> <small>last 15 minutes</small></h4>
         </div>
     </div>
 </section>
-<!-- /general info -->
 
-<!-- cpu info -->
 <section class="box">
     <h3>CPU's</h3>
     <table class="table table-hover table-striped" id="cpus-table">
@@ -70,7 +68,7 @@
             </tr>
         </thead>
         <tbody>
-        <% _.each(cpu.cores, function(core, i){ %>
+        <% _.each(stats.cpu.cores, function(core, i){ %>
         <tr>
             <td><%= i + 1 %></td>
             <td><%= core.user %></td>
@@ -105,7 +103,7 @@
             </tr>
         </thead>
         <tbody>
-        <% _.each(file_systems, function(file_system){ %>
+        <% _.each(stats.file_systems, function(file_system){ %>
         <tr>
             <td><%= file_system.dir %></td>
             <td><%= file_system.dev %></td>
@@ -137,7 +135,7 @@
             </tr>
         </thead>
         <tbody>
-        <% _.each(processes, function(process){ %>
+        <% _.each(stats.processes, function(process){ %>
         <tr>
             <td><%= process.pid %></td>
             <td><%= process.name %></td>
@@ -169,7 +167,7 @@
             </tr>
         </thead>
         <tbody>
-        <% _.each(network_interfaces, function(network_interface){ %>
+        <% _.each(stats.network_interfaces, function(network_interface){ %>
         <tr>
             <td><%= network_interface.name %></td>
             <td><%= network_interface.type %></td>
