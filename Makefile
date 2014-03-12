@@ -11,13 +11,9 @@ JS_SOURCES = public/js/vendor/jquery.js \
 	public/js/stats.js \
 	public/js/app.js
 
-JS_DEST = public/assets/app.js
-
 CSS_SOURCES = public/css/vendor/bootstrap.css \
 	public/css/vendor/jquery.dynatable.css \
 	public/css/main.css
-
-CSS_DEST = public/assets/app.css
 
 MONGOOSE_HOME = vendor/mongoose
 MONGOOSE_INC = $(MONGOOSE_HOME)
@@ -66,7 +62,7 @@ $(JS_DEST):
 	cat $(JS_SOURCES) > $(JS_DEST)
 
 src/resources.c: $(JS_DEST) $(CSS_DEST)
-	perl scripts/mkdata.pl public/index.html public/assets/app.js public/assets/app.css > src/resources.c
+	perl scripts/mkdata.pl public/index.html $(CSS_SOURCES) $(JS_SOURCES) > src/resources.c
 
 $(JSON_LIB):
 	cd $(JSON_HOME); ./autogen.sh; ./configure; make

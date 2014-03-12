@@ -54,7 +54,8 @@ int request_handler (struct mg_connection *conn)
     // serve assets from resources.c
     size_t asset_size;
     int is_modified = 0;
-    const char *asset_content = NULL, *if_modifier_since_header = NULL;
+    const char *asset_content = NULL, *if_modifier_since_header = NULL,
+               *extension;
     char date_str[48], cache_control[58], expires[48], last_modified[48];
     time_t current_time, expires_time, if_modified_time, modified_time;
     struct tm *current_time_tm, *expires_tm, if_modifier_since, *last_modified_tm;
@@ -78,12 +79,19 @@ int request_handler (struct mg_connection *conn)
     if (strcmp("/", conn->uri) == 0) {
         asset_content = find_embedded_file("public/index.html", &asset_size);
         mg_send_header(conn, "Content-Type", "text/html; charset=utf-8");
-    } else if (strcmp("/assets/app.js", conn->uri) == 0) {
-        asset_content = find_embedded_file("public/assets/app.js", &asset_size);
-        mg_send_header(conn, "Content-Type", "application/x-javascript; charset=utf-8");
-    } else if(strcmp("/assets/app.css", conn->uri) == 0) {
-        asset_content = find_embedded_file("public/assets/app.css", &asset_size);
-        mg_send_header(conn, "Content-Type", "text/css; charset=utf-8");
+    } else {
+        sprintf(tmpBuf, "public%s", conn->uri);
+        asset_content = find_embedded_file(tmpBuf, &asset_size);
+
+        if (asset_content != NULL) {
+            extension = strrchr(tmpBuf, '.');
+
+            if (strcmp(extension, ".js") == 0) {
+                mg_send_header(conn, "Content-Type", "application/x-javascript; charset=utf-8");
+            } else if (strcmp(extension, ".css") == 0) {
+                mg_send_header(conn, "Content-Type", "text/css; charset=utf-8");
+            }
+        }
     }
 
     if (asset_content != NULL) {
