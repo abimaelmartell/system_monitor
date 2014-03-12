@@ -1,0 +1,51 @@
+<div class="modal fade" id="process-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Process <%= pid %></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-striped">
+                    <tr>
+                        <td>Name</td>
+                        <td><%= name %></td>
+                    </tr>
+                    <tr>
+                        <td>User</td>
+                        <td><%= user %></td>
+                    </tr>
+                    <tr>
+                        <td>Group</td>
+                        <td><%= group %></td>
+                    </tr>
+                    <tr>
+                        <td>State</td>
+                        <td><%= state %></td>
+                    </tr>
+                    <tr>
+                        <td>PID</td>
+                        <td><%= pid %></td>
+                    </tr>
+                    <tr>
+                        <td>Arguments</td>
+                        <td>
+                            <pre><% _.each(arguments, function(arg) { %><%= arg + "\n" %><% }); %></pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Command</td>
+                        <td><pre><%= exe.name %></pre></td>
+                    </tr>
+                    <tr>
+                        <td>CWD (<a href="http://en.wikipedia.org/wiki/Working_directory" target="_blank" title="Current Working Directory">?</a>)</td>
+                        <td><pre><%= exe.cwd %></pre></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

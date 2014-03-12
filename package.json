@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-jst": "^0.6.0"
+  }
+}

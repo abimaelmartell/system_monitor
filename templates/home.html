@@ -1,0 +1,187 @@
+<section class="row mini-boxes">
+    <div class="col-sm-3">
+        <div class="stat-resume">
+            <h4><%= memory.used_percent %>% <small>RAM Usage</small></h4>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="stat-resume">
+            <h4><%= disk_usage_percent %>% <small>Disk Usage</small></h4>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="stat-resume">
+            <h4><%= cpu_usage_percent %>% <small>CPU Usage</small></h4>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="stat-resume load-average">
+            <h4><%= load_average[0].percent %>% <small>Load Average</small></h4>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-sm-8">
+        <div class="box">
+            <h3>System Information</h3>
+            <h4>Processor: <span class="text-muted"><%= cpu.vendor + " " + cpu.model %></span></h4>
+            <h4>Uptime: <span class="text-muted"><%= uptime_string %></span></h4>
+            <h4>Operative System: <span class="text-muted"><%= system_info.name + " " + system_info.version + " " + system_info.description + " " + system_info.arch %></span></h4>
+
+            <h3>Network Information <small> Default interface <%= network_info.default_gateway_interface %></small></h3>
+            <h4>Host Name: <span class="text-muted"><%= network_info.host_name %></span></h4>
+            <h4>Default Gateway: <span class="text-muted"><%= network_info.default_gateway %></span></h4>
+            <h4>Primary DNS: <span class="text-muted"><%= network_info.primary_dns %></span></h4>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="box">
+            <h3>RAM Information</h3>
+            <h4>Total: <%= memory.total %> MB</h4>
+            <h4>Used: <%= App.Utils.convertBytes(memory.used) %></h4>
+            <h4>Free: <%= App.Utils.convertBytes(memory.free) %></h4>
+
+            <h3>Load Average</h3>
+            <h4><%= load_average[0].load + " &raquo; " + load_average[0].percent + "%" %> <small>last minute</small></h4>
+            <h4><%= load_average[1].load + " &raquo; " + load_average[1].percent + "%" %> <small>last 5 minutes</small></h4>
+            <h4><%= load_average[2].load + " &raquo; " + load_average[2].percent + "%" %> <small>last 15 minutes</small></h4>
+        </div>
+    </div>
+</section>
+<!-- /general info -->
+
+<!-- cpu info -->
+<section class="box">
+    <h3>CPU's</h3>
+    <table class="table table-hover table-striped" id="cpus-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>System</th>
+                <th>Nice</th>
+                <th>Idle</th>
+                <th>Wait</th>
+                <th>IRQ</th>
+                <th>Soft IRQ</th>
+                <th>Stolen</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% _.each(cpu.cores, function(core, i){ %>
+        <tr>
+            <td><%= i + 1 %></td>
+            <td><%= core.user %></td>
+            <td><%= core.sys %></td>
+            <td><%= core.nice %></td>
+            <td><%= core.idle %></td>
+            <td><%= core.wait %></td>
+            <td><%= core.irq %></td>
+            <td><%= core.soft_irq %></td>
+            <td><%= core.stolen %></td>
+            <td><%= core.total %></td>
+        </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</section>
+
+<section class="box">
+    <h3>File Systems</h3>
+    <table class="table table-hover table-striped" id="file-systems-table">
+        <thead>
+            <tr>
+                <th>Dir</th>
+                <th>Dev</th>
+                <th>Type</th>
+                <th>Usage Percent</th>
+                <th>Total</th>
+                <th>Free</th>
+                <th>Used</th>
+                <th>Available</th>
+                <th>Files</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% _.each(file_systems, function(file_system){ %>
+        <tr>
+            <td><%= file_system.dir %></td>
+            <td><%= file_system.dev %></td>
+            <td><%= file_system.type %></td>
+            <td><%= (file_system.usage.use_percent * 100).toFixed(2) %> %</td>
+            <td><%= file_system.usage.total %></td>
+            <td><%= file_system.usage.free %></td>
+            <td><%= file_system.usage.used %></td>
+            <td><%= file_system.usage.available %></td>
+            <td><%= file_system.usage.files %></td>
+        </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</section>
+
+<section class="box">
+    <h1>Processes</h1>
+    <table class="table table-hover table-striped" id="processes-table">
+        <thead>
+            <tr>
+                <th>PID</th>
+                <th>Process Name</th>
+                <th>CPU %</th>
+                <th>Memory</th>
+                <th>User</th>
+                <th data-dynatable-sort>Threads</th>
+                <th>State</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% _.each(processes, function(process){ %>
+        <tr>
+            <td><%= process.pid %></td>
+            <td><%= process.name %></td>
+            <td><%= process.cpu.percent %></td>
+            <td><%= process.memory.resident %></td>
+            <td><%= process.user %></td>
+            <td><%= process.threads %></td>
+            <td><%= process.state %></td>
+        </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</section>
+
+<section class="box">
+    <h1>Network Interfaces</h1>
+    <table class="table table-hover table-striped" id="network-interfaces-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>IP Address</th>
+                <th>MAC Address</th>
+                <th>Speed</th>
+                <th>Transmitted</th>
+                <th>Received</th>
+                <th>Transmitted Packets</th>
+                <th>Received Packets</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% _.each(network_interfaces, function(network_interface){ %>
+        <tr>
+            <td><%= network_interface.name %></td>
+            <td><%= network_interface.type %></td>
+            <td><%= network_interface.address.ip %></td>
+            <td><%= network_interface.address.mac %></td>
+            <td><%= network_interface.stat.speed %></td>
+            <td><%= network_interface.stat.rx_bytes %></td>
+            <td><%= network_interface.stat.tx_bytes %></td>
+            <td><%= network_interface.stat.rx_packets %></td>
+            <td><%= network_interface.stat.tx_packets %></td>
+        </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</section>
