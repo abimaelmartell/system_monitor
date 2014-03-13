@@ -75,7 +75,6 @@ window.App = window.App || {};
             });
         },
 
-
         process: function(pid) {
             var process = App.Stats.findProcessByPID(pid)
               , view = new App.ProcessView({ model: process });
@@ -98,7 +97,7 @@ window.App = window.App || {};
 
         renderView: function(view) {
             if(this.currentView){
-                this.currentView.remove();
+                this.currentView.$el.empty();
                 this.currentView.unbind();
             }
 
