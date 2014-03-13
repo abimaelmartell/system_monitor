@@ -16,9 +16,19 @@ window.App = window.App || {};
         },
 
         show_process: function(ev) {
-            var pid = $(ev.currentTarget).find('td').first().text();
+            var pid = $(ev.currentTarget).find('td').first().text()
+              , process = App.Stats.findProcessByPID(pid)
+              , view = new App.ProcessView({ model: process });
 
-            App.Router.navigate('process/' + pid, {trigger: true, replace: true});
+            view.render();
+
+            /* show the modal */
+            $("#process-modal")
+                .modal()
+                .on('hidden.bs.modal', function() {
+                    view.$el.empty();
+                    view.undelegateEvents();
+                });
         }
     });
 

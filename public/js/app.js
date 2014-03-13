@@ -11,7 +11,6 @@ window.App = window.App || {};
     var Router = Backbone.Router.extend({
         routes: {
             "": "home",
-            "process/:id": "process"
         },
 
         home: function() {
@@ -75,30 +74,10 @@ window.App = window.App || {};
             });
         },
 
-        process: function(pid) {
-            var process = App.Stats.findProcessByPID(pid)
-              , view = new App.ProcessView({ model: process });
-
-            view.render();
-
-            var _this = this;
-
-            $("#process-modal")
-                .modal()
-                .on('hidden.bs.modal', function() {
-                    if ($("#main").is(":empty")) {
-                        _this.navigate('', {trigger: true, replace: true});
-                    } else {
-                        _this.navigate('', {trigger: false, replace: true});
-                    }
-                })
-            ;
-        },
-
         renderView: function(view) {
             if(this.currentView){
                 this.currentView.$el.empty();
-                this.currentView.unbind();
+                this.currentView.undelegateEvents();
             }
 
             view.render();
