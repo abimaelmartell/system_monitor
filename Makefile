@@ -8,8 +8,10 @@ JS_SOURCES = public/js/vendor/jquery.js \
 	public/js/vendor/bootstrap.js \
 	public/js/vendor/underscore.js \
 	public/js/vendor/backbone.js \
+	public/js/templates.js \
 	public/js/utils.js \
 	public/js/stats.js \
+	public/js/views.js \
 	public/js/app.js
 
 CSS_SOURCES = public/css/vendor/bootstrap.css \
@@ -44,11 +46,15 @@ ifeq ($(UNAME_S),FreeBSD)
 	LIBS += -lkvm
 endif
 
-.PHONY: default all clean
+.PHONY: default all clean debug
 
 default: $(LIB_TARGETS) $(PROGRAM)
 
 all: default
+
+debug: CFLAGS += -DDEBUG=1
+debug: all
+
 
 %.o: %.c $(HEADERS)
 	gcc -c $< -o $@ $(INC) $(CFLAGS)
