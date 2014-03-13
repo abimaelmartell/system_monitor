@@ -38,6 +38,12 @@ window.App = window.App || {};
             return load_average_parsed;
         },
 
+        findProcessByPID: function(pid){
+            return _.find(this.attributes.processes, function(el){
+                return pid == el.pid;
+            });
+        },
+
         toJSON: function() {
             var attributes = _.clone(this.attributes);
             attributes.cpu_usage_percent = this.getCPUUsagePercent();

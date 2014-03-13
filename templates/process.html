@@ -3,43 +3,43 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Process <%= pid %></h4>
+                <h4 class="modal-title">Process <%= process.pid %></h4>
             </div>
             <div class="modal-body">
                 <table class="table table-hover table-striped">
                     <tr>
                         <td>Name</td>
-                        <td><%= name %></td>
+                        <td><%= process.name %></td>
                     </tr>
                     <tr>
                         <td>User</td>
-                        <td><%= user %></td>
+                        <td><%= process.user %></td>
                     </tr>
                     <tr>
                         <td>Group</td>
-                        <td><%= group %></td>
+                        <td><%= process.group %></td>
                     </tr>
                     <tr>
                         <td>State</td>
-                        <td><%= state %></td>
+                        <td><%= process.state %></td>
                     </tr>
                     <tr>
                         <td>PID</td>
-                        <td><%= pid %></td>
+                        <td><%= process.pid %></td>
                     </tr>
                     <tr>
                         <td>Arguments</td>
                         <td>
-                            <pre><% _.each(arguments, function(arg) { %><%= arg + "\n" %><% }); %></pre>
+                            <pre><% _.each(process.arguments, function(arg) { %><%= arg + "\n" %><% }); %></pre>
                         </td>
                     </tr>
                     <tr>
                         <td>Command</td>
-                        <td><pre><%= exe.name %></pre></td>
+                        <td><pre><%= process.exe.name %></pre></td>
                     </tr>
                     <tr>
                         <td>CWD (<a href="http://en.wikipedia.org/wiki/Working_directory" target="_blank" title="Current Working Directory">?</a>)</td>
-                        <td><pre><%= exe.cwd %></pre></td>
+                        <td><pre><%= process.exe.cwd %></pre></td>
                     </tr>
                 </table>
             </div>

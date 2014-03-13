@@ -85,7 +85,7 @@ __p += '\n        <tr>\n            <td>' +
 ((__t = ( file_system.usage.files )) == null ? '' : __t) +
 '</td>\n        </tr>\n        ';
  }) ;
-__p += '\n        </tbody>\n    </table>\n</section>\n\n<section class="box">\n    <h1>Processes</h1>\n    <table class="table table-hover table-striped" id="processes-table">\n        <thead>\n            <tr>\n                <th>PID</th>\n                <th>Process Name</th>\n                <th>CPU %</th>\n                <th>Memory</th>\n                <th>User</th>\n                <th data-dynatable-sort>Threads</th>\n                <th>State</th>\n            </tr>\n        </thead>\n        <tbody>\n        ';
+__p += '\n        </tbody>\n    </table>\n</section>\n\n<section class="box">\n    <h1>Processes</h1>\n    <table class="table table-hover table-striped" id="processes-table">\n        <thead>\n            <tr>\n                <th>PID</th>\n                <th>Process Name</th>\n                <th>CPU %</th>\n                <th>Memory</th>\n                <th>User</th>\n                <th>Threads</th>\n                <th>State</th>\n            </tr>\n        </thead>\n        <tbody>\n        ';
  _.each(stats.processes, function(process){ ;
 __p += '\n        <tr>\n            <td>' +
 ((__t = ( process.pid )) == null ? '' : __t) +
@@ -137,26 +137,26 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class="modal fade" id="process-modal">\n    <div class="modal-dialog modal-lg">\n        <div class="modal-content">\n            <div class="modal-header">\n                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n                <h4 class="modal-title">Process ' +
-((__t = ( pid )) == null ? '' : __t) +
+((__t = ( process.pid )) == null ? '' : __t) +
 '</h4>\n            </div>\n            <div class="modal-body">\n                <table class="table table-hover table-striped">\n                    <tr>\n                        <td>Name</td>\n                        <td>' +
-((__t = ( name )) == null ? '' : __t) +
+((__t = ( process.name )) == null ? '' : __t) +
 '</td>\n                    </tr>\n                    <tr>\n                        <td>User</td>\n                        <td>' +
-((__t = ( user )) == null ? '' : __t) +
+((__t = ( process.user )) == null ? '' : __t) +
 '</td>\n                    </tr>\n                    <tr>\n                        <td>Group</td>\n                        <td>' +
-((__t = ( group )) == null ? '' : __t) +
+((__t = ( process.group )) == null ? '' : __t) +
 '</td>\n                    </tr>\n                    <tr>\n                        <td>State</td>\n                        <td>' +
-((__t = ( state )) == null ? '' : __t) +
+((__t = ( process.state )) == null ? '' : __t) +
 '</td>\n                    </tr>\n                    <tr>\n                        <td>PID</td>\n                        <td>' +
-((__t = ( pid )) == null ? '' : __t) +
+((__t = ( process.pid )) == null ? '' : __t) +
 '</td>\n                    </tr>\n                    <tr>\n                        <td>Arguments</td>\n                        <td>\n                            <pre>';
- _.each(arguments, function(arg) { ;
+ _.each(process.arguments, function(arg) { ;
 __p +=
 ((__t = ( arg + "\n" )) == null ? '' : __t);
  }); ;
 __p += '</pre>\n                        </td>\n                    </tr>\n                    <tr>\n                        <td>Command</td>\n                        <td><pre>' +
-((__t = ( exe.name )) == null ? '' : __t) +
+((__t = ( process.exe.name )) == null ? '' : __t) +
 '</pre></td>\n                    </tr>\n                    <tr>\n                        <td>CWD (<a href="http://en.wikipedia.org/wiki/Working_directory" target="_blank" title="Current Working Directory">?</a>)</td>\n                        <td><pre>' +
-((__t = ( exe.cwd )) == null ? '' : __t) +
+((__t = ( process.exe.cwd )) == null ? '' : __t) +
 '</pre></td>\n                    </tr>\n                </table>\n            </div>\n            <div class="modal-footer">\n                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\n            </div>\n        </div>\n    </div>\n</div>\n';
 
 }

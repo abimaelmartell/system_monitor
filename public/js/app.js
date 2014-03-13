@@ -1,14 +1,22 @@
 window.App = window.App || {};
 (function() {
 
+    // disable push state for dynatable
+    $.dynatableSetup({
+        features: {
+            pushState: false
+        }
+    });
+
     var Router = Backbone.Router.extend({
         routes: {
-            "": "home"
+            "": "home",
+            "process/:id": "process"
         },
 
         home: function() {
             this.render_home();
-            
+
             var _this = this;
             $("[data-action='refresh-stats']").on('click', function() {
                 App.Stats.fetch()
@@ -19,7 +27,7 @@ window.App = window.App || {};
         },
 
         render_home: function() {
-            var view = this.showView("#main", new App.HomeView);
+            var view = this.renderView(new App.HomeView);
 
             // init dynatable
             $("#cpus-table").dynatable();
@@ -67,13 +75,34 @@ window.App = window.App || {};
             });
         },
 
-        showView: function(selector, view) {
+
+        process: function(pid) {
+            var process = App.Stats.findProcessByPID(pid)
+              , view = new App.ProcessView({ model: process });
+
+            view.render();
+
+            var _this = this;
+
+            $("#process-modal")
+                .modal()
+                .on('hidden.bs.modal', function() {
+                    if ($("#main").is(":empty")) {
+                        _this.navigate('', {trigger: true, replace: true});
+                    } else {
+                        _this.navigate('', {trigger: false, replace: true});
+                    }
+                })
+            ;
+        },
+
+        renderView: function(view) {
             if(this.currentView){
                 this.currentView.remove();
                 this.currentView.unbind();
             }
 
-            $(selector).html(view.render().el);
+            view.render();
 
             this.currentView = view;
 
