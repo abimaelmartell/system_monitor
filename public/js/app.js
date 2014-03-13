@@ -8,6 +8,14 @@ window.App = window.App || {};
         }
     });
 
+    /**
+     * Destroy the view and unbind events
+     */
+    Backbone.View.prototype.destroy = function() {
+        this.$el.empty();
+        this.undelegateEvents();
+    };
+
     var Router = Backbone.Router.extend({
         routes: {
             "": "home",
@@ -76,8 +84,7 @@ window.App = window.App || {};
 
         renderView: function(view) {
             if(this.currentView){
-                this.currentView.$el.empty();
-                this.currentView.undelegateEvents();
+                this.currentView.destroy();
             }
 
             view.render();

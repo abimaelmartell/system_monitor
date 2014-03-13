@@ -26,8 +26,7 @@ window.App = window.App || {};
             $("#process-modal")
                 .modal()
                 .on('hidden.bs.modal', function() {
-                    view.$el.empty();
-                    view.undelegateEvents();
+                    view.destroy();
                 });
         }
     });
