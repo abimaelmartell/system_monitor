@@ -10,8 +10,61 @@ window.App = window.App || {};
             'click #processes-table tbody tr': 'show_process'
         },
 
+        initialize: function() {
+            App.Stats.on('change', this.render, this);
+        },
+
         render: function() {
             this.$el.html(this.template({ stats: App.Stats.toJSON() }));
+
+            this.render_grids();
+        },
+
+        render_grids: function() {
+            // init dynatable
+            $("#cpus-table").dynatable();
+
+            $("#file-systems-table").dynatable({
+                readers: {
+                    total: App.Utils.reader,
+                    free: App.Utils.reader,
+                    used: App.Utils.reader,
+                    available: App.Utils.reader,
+                    files: App.Utils.reader
+                },
+                writers: {
+                    total: App.Utils.writer,
+                    free: App.Utils.writer,
+                    used: App.Utils.writer,
+                    available: App.Utils.writer
+                }
+            });
+
+            $("#processes-table").dynatable({
+                readers: {
+                    pid: App.Utils.reader,
+                    memory: App.Utils.reader,
+                    threads: App.Utils.reader
+                },
+                writers: {
+                    memory: App.Utils.writer
+                }
+            });
+
+            $("#network-interfaces-table").dynatable({
+                readers: {
+                    speed: App.Utils.reader,
+                    transmitted: App.Utils.reader,
+                    received: App.Utils.reader,
+                    transmittedPackets: App.Utils.reader,
+                    receivedPackets: App.Utils.reader
+                },
+                writers: {
+                    speed: App.Utils.writer,
+                    transmitted: App.Utils.writer,
+                    received: App.Utils.writer
+                }
+            });
             return this;
         },
 

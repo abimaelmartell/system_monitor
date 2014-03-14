@@ -34,52 +34,7 @@ window.App = window.App || {};
         },
 
         render_home: function() {
-            var view = this.renderView(new App.HomeView);
-
-            // init dynatable
-            $("#cpus-table").dynatable();
-
-            $("#file-systems-table").dynatable({
-                readers: {
-                    total: App.Utils.reader,
-                    free: App.Utils.reader,
-                    used: App.Utils.reader,
-                    available: App.Utils.reader,
-                    files: App.Utils.reader
-                },
-                writers: {
-                    total: App.Utils.writer,
-                    free: App.Utils.writer,
-                    used: App.Utils.writer,
-                    available: App.Utils.writer
-                }
-            });
-
-            $("#processes-table").dynatable({
-                readers: {
-                    pid: App.Utils.reader,
-                    memory: App.Utils.reader,
-                    threads: App.Utils.reader
-                },
-                writers: {
-                    memory: App.Utils.writer
-                }
-            });
-
-            $("#network-interfaces-table").dynatable({
-                readers: {
-                    speed: App.Utils.reader,
-                    transmitted: App.Utils.reader,
-                    received: App.Utils.reader,
-                    transmittedPackets: App.Utils.reader,
-                    receivedPackets: App.Utils.reader
-                },
-                writers: {
-                    speed: App.Utils.writer,
-                    transmitted: App.Utils.writer,
-                    received: App.Utils.writer
-                }
-            });
+            this.renderView(new App.HomeView);
         },
 
         renderView: function(view) {
@@ -98,6 +53,9 @@ window.App = window.App || {};
     App.Stats.fetch()
         .done(function(){
             App.Router = new Router();
+
+            App.Sync = new App.WebSocket();
+
             Backbone.history.start();
         })
     ;
