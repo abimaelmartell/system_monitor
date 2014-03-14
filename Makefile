@@ -11,6 +11,7 @@ JS_SOURCES = public/js/vendor/jquery.js \
 	public/js/templates.js \
 	public/js/utils.js \
 	public/js/stats.js \
+	public/js/websocket.js \
 	public/js/views.js \
 	public/js/app.js
 
