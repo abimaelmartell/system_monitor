@@ -6,10 +6,26 @@
 
 struct mg_server *server;
 
+static int iterate_callback (struct mg_connection *conn, enum mg_event ev)
+{
+    if (ev == MG_POLL && conn->is_websocket) {
+        json_object *stats_json = get_stats_json();
+        const char *stats_string = json_object_to_json_string(stats_json);
+
+        mg_websocket_write(conn, 1, stats_string, strlen(stats_string));
+
+        json_object_put(stats_json);
+    }
+    return MG_TRUE;
+}
+
 void initialize_server (void)
 {
     char tmpBuf[100];
-    server = mg_create_server(NULL);
+    unsigned int current_timer = 0,
+                 last_timer = 0;
+
+    server = mg_create_server(NULL, event_handler);
 
     mg_set_option(server, "listening_port", globalOptions.port);
     mg_set_option(server, "run_as_user", "root");
@@ -17,8 +33,6 @@ void initialize_server (void)
     #ifdef DEBUG
     mg_set_option(server, "document_root", "public");
     #endif
-
-    mg_set_request_handler(server, request_handler);
 
     sprintf(
         tmpBuf,
@@ -29,7 +43,14 @@ void initialize_server (void)
     log_line(tmpBuf, LOG_INFO);
 
     for (;;) {
-        mg_poll_server(server, 1000);
+        mg_poll_server(server, 100);
+
+        current_timer = time(NULL);
+
+        if (current_timer - last_timer > 0) {
+            last_timer = current_timer;
+            mg_iterate_over_connections(server, iterate_callback);
+        }
     }
 }
 
@@ -38,16 +59,41 @@ void stop_server (void)
     mg_destroy_server(&server);
 }
 
+int event_handler (struct mg_connection *conn, enum mg_event ev)
+{
+    if (ev == MG_REQUEST) {
+        return request_handler(conn);
+    } else if (ev == MG_AUTH) {
+        return MG_TRUE;
+    }
+
+    return MG_FALSE;
+}
+
 int request_handler (struct mg_connection *conn)
 {
     char tmpBuf[1024];
 
-    sprintf(tmpBuf, "%s %s from %s", conn->request_method, conn->uri, conn->remote_ip);
+    if (conn->is_websocket) {
+        sprintf(tmpBuf, "WEBSOCKET from %s", conn->remote_ip);
+    } else {
+        sprintf(tmpBuf, "%s %s from %s", conn->request_method, conn->uri, conn->remote_ip);
+    }
 
     log_line(tmpBuf, LOG_INFO);
 
     if (strcmp(STATS_JSON_URI, conn->uri) == 0) {
         return stats_json(conn);
+    }
+
+    if (conn->is_websocket) {
+        mg_websocket_write(conn, 1, conn->content, conn->content_len);
+
+        if (conn->content_len == 4 && !memcmp(conn->content, "exit", 4)) {
+            return MG_FALSE;
+        }
+
+        return MG_TRUE;
     }
 
     #ifndef DEBUG
@@ -118,11 +164,11 @@ int request_handler (struct mg_connection *conn)
             mg_send_data(conn, "\r\n", 2);
         }
 
-        return MG_REQUEST_PROCESSED;
+        return MG_TRUE;
     }
     #endif
 
-    return MG_REQUEST_NOT_PROCESSED;
+    return MG_FALSE;
 }
 
 int stats_json (struct mg_connection *conn)
@@ -145,5 +191,5 @@ int stats_json (struct mg_connection *conn)
 
     json_object_put(stats_json);
 
-    return MG_REQUEST_PROCESSED;
+    return MG_TRUE;
 }

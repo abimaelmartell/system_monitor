@@ -13,5 +13,6 @@ extern struct mg_server *server;
 extern void initialize_server (void);
 extern void stop_server (void);
 
+extern int event_handler (struct mg_connection *conn, enum mg_event ev);
 extern int request_handler (struct mg_connection *conn);
 extern int stats_json (struct mg_connection *conn);
