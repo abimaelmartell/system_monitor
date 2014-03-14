@@ -85,6 +85,7 @@ clean:
 	-rm -f $(OBJECTS)
 	-rm -f $(PROGRAM)
 	-rm -f public/assets/*
+	-rm src/resources.c
 
 install: $(PROGRAM)
 	install -C $(PROGRAM) $(BINDIR)/$(PROGRAM)
