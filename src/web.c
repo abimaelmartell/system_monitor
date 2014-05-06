@@ -40,9 +40,9 @@ void stop_server (void)
 
 int request_handler (struct mg_connection *conn)
 {
-    char tmpBuf[1024];
+    char tmpBuf[MAX_BUFFER_SIZE];
 
-    sprintf(tmpBuf, "%s %s from %s", conn->request_method, conn->uri, conn->remote_ip);
+    snprintf(tmpBuf, sizeof(tmpBuf), "%s %s from %s", conn->request_method, conn->uri, conn->remote_ip);
 
     log_line(tmpBuf, LOG_INFO);
 
@@ -80,7 +80,7 @@ int request_handler (struct mg_connection *conn)
         asset_content = find_embedded_file("public/index.html", &asset_size);
         mg_send_header(conn, "Content-Type", "text/html; charset=utf-8");
     } else {
-        sprintf(tmpBuf, "public%s", conn->uri);
+        snprintf(tmpBuf, sizeof(tmpBuf), "public%s", conn->uri);
         asset_content = find_embedded_file(tmpBuf, &asset_size);
 
         if (asset_content != NULL) {

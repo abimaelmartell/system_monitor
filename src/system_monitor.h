@@ -25,6 +25,7 @@ enum log_levels {
 
 #define LOG_INFO_LINE "[%s] %s"
 #define CONST_RFC1945_TIME_FORMAT "%a, %d %b %Y %H:%M:%S GMT"
+#define MAX_BUFFER_SIZE 32768
 
 struct global_options {
     char *port;
