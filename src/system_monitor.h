@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <time.h>
+#include <ctype.h>
 
 #include <sigar.h>
 #include <mongoose.h>

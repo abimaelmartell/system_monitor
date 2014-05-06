@@ -63,3 +63,25 @@ char *mac_address_to_string (unsigned char mac[8])
   
     return mac_ptr;
 }
+
+/* from vendor/mongoose/mongoose.c mg_url_encode, though not the same
+ * exactly */
+void url_encode(const char *src, char *dst, size_t dst_len) {
+  static const char *dont_escape = "/._-$,;~()";
+  static const char *hex = "0123456789abcdef";
+  const char *end = dst + dst_len - 1;
+
+  for (; *src != '\0' && dst < end; src++, dst++) {
+    if (isalnum(*(const unsigned char *) src) ||
+        strchr(dont_escape, * (const unsigned char *) src) != NULL) {
+      *dst = *src;
+    } else if (dst + 2 < end) {
+      dst[0] = '%';
+      dst[1] = hex[(* (const unsigned char *) src) >> 4];
+      dst[2] = hex[(* (const unsigned char *) src) & 0xf];
+      dst += 2;
+    }
+  }
+
+  *dst = '\0';
+}
