@@ -41,8 +41,11 @@ void stop_server (void)
 int request_handler (struct mg_connection *conn)
 {
     char tmpBuf[MAX_BUFFER_SIZE];
+    char encUri[MAX_BUFFER_SIZE];
 
-    snprintf(tmpBuf, sizeof(tmpBuf), "%s %s from %s", conn->request_method, conn->uri, conn->remote_ip);
+    url_encode(conn->uri, encUri, sizeof(encUri));
+
+    snprintf(tmpBuf, sizeof(tmpBuf), "%s %s from %s", conn->request_method, encUri, conn->remote_ip);
 
     log_line(tmpBuf, LOG_INFO);
 
