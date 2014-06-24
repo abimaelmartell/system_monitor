@@ -36,11 +36,23 @@ window.App = window.App || {};
     }
 
     App.Utils.convertBytes = function(bytes, sizes){
-        var sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        if (bytes == 0) return 0;
+        if (typeof sizes == 'undefined') {
+            sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        }
+
+        if (bytes == 0) {
+            return 0;
+        }
+
         var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
         if (i == 0) { return (bytes / Math.pow(1024, i)) + ' ' + sizes[i]; }
         return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+    }
+
+    App.Utils.convertKBytes = function(kbytes, sizes){
+        var sizes = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+        return App.Utils.convertBytes(kbytes, sizes);
     }
 
     App.Utils.reader = function(el) {
@@ -49,6 +61,10 @@ window.App = window.App || {};
 
     App.Utils.writer = function(record) {
         return record[this.id] ? App.Utils.convertBytes(record[this.id]) : 0;
+    }
+
+    App.Utils.kbWriter = function(record) {
+        return record[this.id] ? App.Utils.convertKBytes(record[this.id]) : 0;
     }
 
 })();

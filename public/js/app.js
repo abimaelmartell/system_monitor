@@ -48,10 +48,10 @@ window.App = window.App || {};
                     files: App.Utils.reader
                 },
                 writers: {
-                    total: App.Utils.writer,
-                    free: App.Utils.writer,
-                    used: App.Utils.writer,
-                    available: App.Utils.writer
+                    total: App.Utils.kbWriter,
+                    free: App.Utils.kbWriter,
+                    used: App.Utils.kbWriter,
+                    available: App.Utils.kbWriter
                 }
             });
 
