@@ -1,0 +1,4 @@
+(function(angular) {
+
+    //angular
+})(angular);

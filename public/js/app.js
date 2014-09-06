@@ -1,104 +1,30 @@
-window.App = window.App || {};
-(function() {
+(function(angular) {
 
-    // disable push state for dynatable
-    $.dynatableSetup({
-        features: {
-            pushState: false
-        }
-    });
+    'use strict';
 
-    /**
-     * Destroy the view and unbind events
-     */
-    Backbone.View.prototype.destroy = function() {
-        this.$el.empty();
-        this.undelegateEvents();
-    };
-
-    var Router = Backbone.Router.extend({
-        routes: {
-            "": "home",
-        },
-
-        home: function() {
-            this.render_home();
-
-            var _this = this;
-            $("[data-action='refresh-stats']").on('click', function() {
-                App.Stats.fetch()
-                    .done(function() {
-                        _this.render_home();
-                    })
-            });
-        },
-
-        render_home: function() {
-            var view = this.renderView(new App.HomeView);
-
-            // init dynatable
-            $("#cpus-table").dynatable();
-
-            $("#file-systems-table").dynatable({
-                readers: {
-                    total: App.Utils.reader,
-                    free: App.Utils.reader,
-                    used: App.Utils.reader,
-                    available: App.Utils.reader,
-                    files: App.Utils.reader
-                },
-                writers: {
-                    total: App.Utils.kbWriter,
-                    free: App.Utils.kbWriter,
-                    used: App.Utils.kbWriter,
-                    available: App.Utils.kbWriter
-                }
-            });
-
-            $("#processes-table").dynatable({
-                readers: {
-                    pid: App.Utils.reader,
-                    memory: App.Utils.reader,
-                    threads: App.Utils.reader
-                },
-                writers: {
-                    memory: App.Utils.writer
-                }
-            });
-
-            $("#network-interfaces-table").dynatable({
-                readers: {
-                    speed: App.Utils.reader,
-                    transmitted: App.Utils.reader,
-                    received: App.Utils.reader,
-                    transmittedPackets: App.Utils.reader,
-                    receivedPackets: App.Utils.reader
-                },
-                writers: {
-                    speed: App.Utils.writer,
-                    transmitted: App.Utils.writer,
-                    received: App.Utils.writer
-                }
-            });
-        },
-
-        renderView: function(view) {
-            if(this.currentView){
-                this.currentView.destroy();
-            }
-
-            view.render();
-
-            this.currentView = view;
-
-            return view;
-        }
-    });
-
-    App.Stats.fetch()
-        .done(function(){
-            App.Router = new Router();
-            Backbone.history.start();
+    angular.module('systemMonitor', ['ngRoute'])
+        .config(function($routeProvider) {
+            $routeProvider
+            .when('/', {
+                    templateUrl: 'views/dashboard.html',
+                    controller: DashboardCtrl
+                })
+            ;
         })
     ;
-})();
+
+    var DashboardCtrl = function ($scope, $http) {
+        $scope.fetchStats = function() {
+            return $http.get('/stats.json').success(function(data, status, headers, config) {
+                $scope.stats = data;
+            });
+        }
+
+        $scope.refreshStats = function() {
+            $scope.fetchStats();
+        }
+
+        $scope.fetchStats();
+    };
+
+})(angular);

@@ -1,0 +1,8 @@
+{
+  "name": "system-monitor",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "1.2.x",
+    "angular-route": "~1.2.23"
+  }
+}
